@@ -11,13 +11,11 @@ import android.widget.Toast;
 import com.example.erik.weatherforecastassignment.model.HourlyForecastData;
 import com.example.erik.weatherforecastassignment.model.HourlyForecastDataParameters;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
-import com.example.erik.weatherforecastassignment.model.WeatherHandler;
-
-import java.util.List;
+import com.example.erik.weatherforecastassignment.model.WeatherModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    private WeatherHandler weatherHandler;
+    private WeatherModel weatherModel;
 
     private TextView weatherLocationText;
     private TextView weatherTemperatureText;
@@ -38,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         latitudeInputField = findViewById(R.id.weather_latitude);
         updateButton = findViewById(R.id.weather_update_button);
 
-        weatherHandler = WeatherHandler.getInstance();
+        weatherModel = WeatherModel.getInstance();
 
         updateButton.setOnClickListener((view) -> {
             //TODO Make async
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected WeatherForecast doInBackground(String... strings) {
-            WeatherForecast weatherForecast = weatherHandler
+            WeatherForecast weatherForecast = weatherModel
                     .getWeatherForecast(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
             return weatherForecast;
         }
