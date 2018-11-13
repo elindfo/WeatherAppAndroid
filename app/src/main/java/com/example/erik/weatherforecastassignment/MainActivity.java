@@ -47,26 +47,26 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private class UpdateWeatherAsyncTask extends AsyncTask<String, Void, List<WeatherForecast>>{
+    private class UpdateWeatherAsyncTask extends AsyncTask<String, Void, WeatherForecast>{
 
 
 
         @Override
-        protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
-            if(weatherForecasts.size() > 0){
-                weatherLocationText.setText(weatherForecasts.get(0).getApprovedTime());
+        protected void onPostExecute(WeatherForecast weatherForecast) {
+            if(weatherForecast != null){
+                weatherLocationText.setText(weatherForecast.getApprovedTime());
             }
             else{
                 weatherLocationText.setText(getResources().getString(R.string.weather_location_not_found_string));
             }
-            super.onPostExecute(weatherForecasts);
+            super.onPostExecute(weatherForecast);
         }
 
         @Override
-        protected List<WeatherForecast> doInBackground(String... strings) {
-            List<WeatherForecast> weatherForecasts = weatherHandler
-                    .getWeatherForecasts(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
-            return weatherForecasts;
+        protected WeatherForecast doInBackground(String... strings) {
+            WeatherForecast weatherForecast = weatherHandler
+                    .getWeatherForecast(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
+            return weatherForecast;
         }
     }
 }

@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface WeatherProvider {
 
-    List<WeatherForecast> getWeatherForecastsByCoord(double lon, double lat);
+    WeatherForecast getWeatherForecastByCoord(double lon, double lat);
 }

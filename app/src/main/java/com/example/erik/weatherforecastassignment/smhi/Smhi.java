@@ -1,7 +1,6 @@
 package com.example.erik.weatherforecastassignment.smhi;
 
-import android.util.MalformedJsonException;
-
+import com.example.erik.weatherforecastassignment.model.HourlyForecastData;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherProvider;
 import com.google.gson.Gson;
@@ -37,15 +36,30 @@ public class Smhi implements WeatherProvider {
     }
 
     @Override
-    public List<WeatherForecast> getWeatherForecastsByCoord(double lon, double lat){
+    public WeatherForecast getWeatherForecastByCoord(double lon, double lat){
         String requestUrl = "https://maceo.sth.kth.se/api/category/pmp3g/version/2/geotype/point/lon/" + lon + "/lat/" + lat + "/";
         WeatherData data = smhiRequest.getWeatherData(requestUrl);
-        List<WeatherForecast> weatherForecasts = new ArrayList<>();
-        if(data == null){
-            return weatherForecasts;
+
+        if(data == null || data.getTimeSeries().length < 1){
+            return null;
         }
-        weatherForecasts.add(new WeatherForecast(data.getApprovedTime()));
-        return weatherForecasts;
+
+        WeatherForecast weatherForecast = new WeatherForecast();
+
+        weatherForecast.setApprovedTime(data.getApprovedTime());
+        TimeSeries ts = data.getTimeSeries()[0];
+        List<HourlyForecastData> hourlyForecastDataList = new ArrayList<>();
+
+        for(Parameters p : ts.getParameters()){
+            HourlyForecastData hourlyForecastData = new HourlyForecastData();
+            hourlyForecastData.setValidTime(ts.getValidTime());
+            hourlyForecastData.setName(p.getName());
+            hourlyForecastData.setUnit(p.getUnit());
+            hourlyForecastData.setValues(p.getValues());
+            hourlyForecastDataList.add(hourlyForecastData);
+        }
+
+        return weatherForecast;
     }
 
     private class SmhiRequest{

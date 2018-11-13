@@ -21,7 +21,7 @@ public class WeatherHandler {
         return weatherHandler;
     }
 
-    public List<WeatherForecast> getWeatherForecasts(double lon, double lat){
-        return weatherProvider.getWeatherForecastsByCoord(lon, lat);
+    public WeatherForecast getWeatherForecast(double lon, double lat){
+        return weatherProvider.getWeatherForecastByCoord(lon, lat);
     }
 }
