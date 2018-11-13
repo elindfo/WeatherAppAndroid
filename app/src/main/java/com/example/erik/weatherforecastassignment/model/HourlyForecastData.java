@@ -1,44 +1,27 @@
 package com.example.erik.weatherforecastassignment.model;
 
+import java.util.List;
+
 public class HourlyForecastData {
 
     private String validTime;
-    private String name;
-    private String unit;
-    private double[] values;
+    private List<HourlyForecastDataParameters> hourlyForecastDataParameters;
 
-    public HourlyForecastData() {
-    }
+    public HourlyForecastData() {}
 
     public String getValidTime() {
         return validTime;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public double[] getValues() {
-        return values;
     }
 
     public void setValidTime(String validTime) {
         this.validTime = validTime;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public List<HourlyForecastDataParameters> getHourlyForecastDataParameters() {
+        return hourlyForecastDataParameters;
     }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public void setValues(double[] values) {
-        this.values = values;
+    public void setHourlyForecastDataParameters(List<HourlyForecastDataParameters> hourlyForecastDataParameters) {
+        this.hourlyForecastDataParameters = hourlyForecastDataParameters;
     }
 }

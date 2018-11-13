@@ -1,6 +1,7 @@
 package com.example.erik.weatherforecastassignment.smhi;
 
 import com.example.erik.weatherforecastassignment.model.HourlyForecastData;
+import com.example.erik.weatherforecastassignment.model.HourlyForecastDataParameters;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherProvider;
 import com.google.gson.Gson;
@@ -45,19 +46,24 @@ public class Smhi implements WeatherProvider {
         }
 
         WeatherForecast weatherForecast = new WeatherForecast();
-
         weatherForecast.setApprovedTime(data.getApprovedTime());
-        TimeSeries ts = data.getTimeSeries()[0];
-        List<HourlyForecastData> hourlyForecastDataList = new ArrayList<>();
 
-        for(Parameters p : ts.getParameters()){
+        List<HourlyForecastData> hourlyForecastDataList = new ArrayList<>();
+        for(TimeSeries ts : data.getTimeSeries()){
             HourlyForecastData hourlyForecastData = new HourlyForecastData();
             hourlyForecastData.setValidTime(ts.getValidTime());
-            hourlyForecastData.setName(p.getName());
-            hourlyForecastData.setUnit(p.getUnit());
-            hourlyForecastData.setValues(p.getValues());
+            List<HourlyForecastDataParameters> hourlyForecastDataParametersList = new ArrayList<>();
+            for(Parameters p : ts.getParameters()){
+                HourlyForecastDataParameters hourlyForecastDataParameters = new HourlyForecastDataParameters();
+                hourlyForecastDataParameters.setName(p.getName());
+                hourlyForecastDataParameters.setUnit(p.getUnit());
+                hourlyForecastDataParameters.setValues(p.getValues());
+                hourlyForecastDataParametersList.add(hourlyForecastDataParameters);
+            }
+            hourlyForecastData.setHourlyForecastDataParameters(hourlyForecastDataParametersList);
             hourlyForecastDataList.add(hourlyForecastData);
         }
+        weatherForecast.setHourlyForecastData(hourlyForecastDataList);
 
         return weatherForecast;
     }

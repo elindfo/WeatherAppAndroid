@@ -10,53 +10,55 @@
         android:id="@+id/weather_update_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="108dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/weather_update_button_string"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/weather_latitude"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/weather_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/weather_location_hint"
-        app:layout_constraintBottom_toTopOf="@+id/weather_update_button"
+        app:layout_constraintBottom_toTopOf="@+id/weather_temperature"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weather_title"
-        app:layout_constraintVertical_bias="0.167" />
+        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/weather_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/weather_title_string"
+        app:layout_constraintBottom_toTopOf="@+id/weather_location"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.046"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.723" />
 
     <EditText
         android:id="@+id/weather_longitude"
-        android:layout_width="160dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginBottom="28dp"
         android:ems="10"
         android:hint="@string/weather_longitude_string"
         android:inputType="numberDecimal"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/weather_latitude"
-        android:layout_width="160dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="@string/weather_latitude_string"
@@ -64,5 +66,35 @@
         android:selectAllOnFocus="true"
         android:singleLine="true"
         app:layout_constraintBaseline_toBaselineOf="@+id/weather_longitude"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toStartOf="@+id/weather_update_button"
+        app:layout_constraintStart_toEndOf="@+id/weather_longitude" />
+
+    <TextView
+        android:id="@+id/weather_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="14dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Temperature:"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.003"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/weather_approved_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Approved time: "
+        app:layout_constraintBottom_toTopOf="@+id/weather_longitude"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.003"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weather_temperature"
+        app:layout_constraintVertical_bias="0.383" />
 </android.support.constraint.ConstraintLayout>
