@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import com.example.erik.weatherforecastassignment.R;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private EditText longitudeInputField;
     private EditText latitudeInputField;
@@ -35,15 +36,15 @@ public class MainActivity extends AppCompatActivity {
         weatherModel = WeatherModel.getInstance();
 
         mRecyclerView = findViewById(R.id.weather_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new RecyclerViewAdapter(new ArrayList<>());
         longitudeInputField = findViewById(R.id.weather_longitude);
         latitudeInputField = findViewById(R.id.weather_latitude);
         updateButton = findViewById(R.id.weather_update_button);
 
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
         updateButton.setOnClickListener((view) -> {
             //TODO Make async
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": updateButton: CLICKED");
             String longitude = longitudeInputField.getText().toString();
             String latitude = latitudeInputField.getText().toString();
             if(longitude.matches("") || latitude.matches("")){
@@ -59,21 +60,20 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
-            if(weatherForecasts.size() > 0){
-                System.out.println("Approved Time: " + weatherForecasts.get(0).getApprovedTime());
-                System.out.println("Valid Time: " + weatherForecasts.get(0).getValidTime());
-                System.out.println("Temperature: " + weatherForecasts.get(0).getTValue());
-                System.out.println("Tcc: " + weatherForecasts.get(0).getTccMeanValue());
-                System.out.println("Longitude: " + weatherForecasts.get(0).getLongitude());
-                System.out.println("Latitude: " + weatherForecasts.get(0).getLatitude());
-                System.out.println();
+            if(weatherForecasts != null){
+                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating recyclerView");
+                mAdapter = new RecyclerViewAdapter(weatherForecasts);
+                mRecyclerView.setAdapter(mAdapter);
             }
-
+            else{
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.weather_location_not_found_string), Toast.LENGTH_SHORT).show();
+            }
             super.onPostExecute(weatherForecasts);
         }
 
         @Override
         protected List<WeatherForecast> doInBackground(String... strings) {
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: Fetching forecasts for lon " + strings[0] + ", lat " + strings[1]);
             List<WeatherForecast> weatherForecasts = weatherModel
                     .getWeatherForecasts(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
             return weatherForecasts;

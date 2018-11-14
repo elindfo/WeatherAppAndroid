@@ -1,5 +1,7 @@
 package com.example.erik.weatherforecastassignment.model;
 
+import android.util.Log;
+
 import com.example.erik.weatherforecastassignment.db.WeatherDatabaseAccess;
 import com.example.erik.weatherforecastassignment.smhi.Smhi;
 
@@ -25,8 +27,10 @@ public class WeatherModel {
     }
 
     public List<WeatherForecast> getWeatherForecasts(double lon, double lat){
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecasts: Fetching forecasts for lon " + lon + ", lat " + lat);
         List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(lon, lat);
-        if(weatherForecasts.size() > 0){
+        if(weatherForecasts != null){
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecasts: Attempting to add to database");
             weatherDatabaseAccess.addWeatherForecasts(weatherForecasts);
         }
         return weatherForecasts;

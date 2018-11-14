@@ -1,6 +1,7 @@
 package com.example.erik.weatherforecastassignment.db;
 
 import android.arch.persistence.room.Room;
+import android.util.Log;
 
 import com.example.erik.weatherforecastassignment.model.ApplicationContextProvider;
 import com.example.erik.weatherforecastassignment.model.DatabaseAccess;
@@ -45,7 +46,7 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
             );
             weatherEntities.add(weatherEntity);
         }
-
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecasts: Adding " + weatherEntities.size() + " new WeatherEntities to database");
         weatherDatabase.weatherDao().insertAll(weatherEntities);
     }
 }
