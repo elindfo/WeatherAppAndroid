@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:id="@+id/weather_recycler_view_layout">
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/weather_recycler_view_item_image"
+        android:src="@mipmap/ic_launcher" />
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Strömsund"
+        android:id="@+id/weather_recycler_view_item_time"
+        android:layout_toRightOf="@+id/weather_recycler_view_item_image"
+        android:layout_marginLeft="15dp"
+        android:textColor="#000"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20C"
+        android:id="@+id/weather_recycler_view_item_temperature"
+        android:layout_below="@+id/weather_recycler_view_item_time"
+        android:layout_toRightOf="@+id/weather_recycler_view_item_image"
+        android:layout_marginLeft="15dp"/>
+</RelativeLayout>
