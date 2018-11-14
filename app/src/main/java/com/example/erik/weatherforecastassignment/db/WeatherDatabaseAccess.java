@@ -40,6 +40,7 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
                     weatherForecast.getValidTime(),
                     weatherForecast.getTValue(),
                     weatherForecast.getTccMeanValue(),
+                    weatherForecast.getWsymb2(),
                     weatherForecast.getLongitude(),
                     weatherForecast.getLatitude(),
                     timestamp

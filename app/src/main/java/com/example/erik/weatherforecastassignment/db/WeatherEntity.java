@@ -24,6 +24,9 @@ public class WeatherEntity {
     @ColumnInfo(name = "tcc_mean_value")
     private double tccMeanValue;
 
+    @ColumnInfo(name = "wsymb2")
+    private int wsymb2;
+
     @ColumnInfo(name = "longitude")
     private double longitude;
 
@@ -33,11 +36,12 @@ public class WeatherEntity {
     @ColumnInfo(name = "timestamp")
     private Date timestamp;
 
-    public WeatherEntity(String approvedTime, String validTime, double tValue, double tccMeanValue, double longitude, double latitude, Date timestamp) {
+    public WeatherEntity(String approvedTime, String validTime, double tValue, double tccMeanValue, int wsymb2, double longitude, double latitude, Date timestamp) {
         this.approvedTime = approvedTime;
         this.validTime = validTime;
         this.tValue = tValue;
         this.tccMeanValue = tccMeanValue;
+        this.wsymb2 = wsymb2;
         this.longitude = longitude;
         this.latitude = latitude;
         this.timestamp = timestamp;
@@ -81,6 +85,14 @@ public class WeatherEntity {
 
     public void setTccMeanValue(double tccMeanValue) {
         this.tccMeanValue = tccMeanValue;
+    }
+
+    public int getWsymb2() {
+        return wsymb2;
+    }
+
+    public void setWsymb2(int wsymb2) {
+        this.wsymb2 = wsymb2;
     }
 
     public double getLongitude() {

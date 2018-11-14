@@ -8,6 +8,7 @@ public class WeatherForecast {
     private String validTime;
     private double tValue;
     private double tccMeanValue;
+    private int wsymb2;
     private double longitude;
     private double latitude;
 
@@ -44,6 +45,14 @@ public class WeatherForecast {
 
     public void setTccMeanValue(double tccMeanValue) {
         this.tccMeanValue = tccMeanValue;
+    }
+
+    public int getWsymb2() {
+        return wsymb2;
+    }
+
+    public void setWsymb2(int wsymb2) {
+        this.wsymb2 = wsymb2;
     }
 
     public double getLongitude() {

@@ -1,5 +1,7 @@
 package com.example.erik.weatherforecastassignment.smhi;
 
+import android.util.Log;
+
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherProvider;
 import com.google.gson.Gson;
@@ -12,8 +14,16 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class Smhi implements WeatherProvider {
 
@@ -36,6 +46,8 @@ public class Smhi implements WeatherProvider {
 
     @Override
     public List<WeatherForecast> getWeatherForecastsByCoord(double lon, double lat){
+
+
         String requestUrl = "https://maceo.sth.kth.se/api/category/pmp3g/version/2/geotype/point/lon/" + lon + "/lat/" + lat + "/";
         WeatherData data = smhiRequest.getWeatherData(requestUrl);
 
@@ -47,7 +59,6 @@ public class Smhi implements WeatherProvider {
 
         for(TimeSeries ts : data.getTimeSeries()){
             WeatherForecast weatherForecast = new WeatherForecast();
-
             weatherForecast.setApprovedTime(data.getApprovedTime());
             weatherForecast.setValidTime(ts.getValidTime());
             weatherForecast.setLongitude(lon);
@@ -61,6 +72,11 @@ public class Smhi implements WeatherProvider {
                 if(p.getName().equals("tcc_mean")){
                     if(p.getValues().length > 0){
                         weatherForecast.setTccMeanValue(p.getValues()[0]);
+                    }
+                }
+                if(p.getName().equals("Wsymb2")){
+                    if(p.getValues().length > 0){
+                        weatherForecast.setWsymb2((int)p.getValues()[0]);
                     }
                 }
             }
@@ -77,6 +93,7 @@ public class Smhi implements WeatherProvider {
         }
 
         public WeatherData getWeatherData(String requestUrl){
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherData: Fetching weather data from URL: " + requestUrl);
             URL url;
             URLConnection urlConnection;
             try{
@@ -91,6 +108,8 @@ public class Smhi implements WeatherProvider {
         }
 
         public PlaceData getPlaceData(String requestUrl){
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherData: Fetching place data from URL: " + requestUrl);
+
             URL url;
             URLConnection urlConnection;
             try{

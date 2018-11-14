@@ -3,11 +3,13 @@ package com.example.erik.weatherforecastassignment.view;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erik.weatherforecastassignment.R;
@@ -15,11 +17,16 @@ import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static com.example.erik.weatherforecastassignment.model.ApplicationContextProvider.getContext;
 
 public class MainActivity extends AppCompatActivity {
 
     private WeatherModel weatherModel;
+
+    private TextView approvedTime;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -35,9 +42,13 @@ public class MainActivity extends AppCompatActivity {
 
         weatherModel = WeatherModel.getInstance();
 
+        approvedTime = findViewById(R.id.weather_approvedtime);
+        approvedTime.setText(String.format(getResources().getString(R.string.weather_approvedtime_text), "Not set"));
         mRecyclerView = findViewById(R.id.weather_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new RecyclerViewAdapter(new ArrayList<>());
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+                DividerItemDecoration.VERTICAL));
+        mAdapter = new RecyclerViewAdapter(getApplicationContext(), new ArrayList<>());
         longitudeInputField = findViewById(R.id.weather_longitude);
         latitudeInputField = findViewById(R.id.weather_latitude);
         updateButton = findViewById(R.id.weather_update_button);
@@ -62,7 +73,11 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
             if(weatherForecasts != null){
                 Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating recyclerView");
-                mAdapter = new RecyclerViewAdapter(weatherForecasts);
+                approvedTime.setText(String.format(getResources()
+                        .getString(R.string.weather_approvedtime_text),
+                        StringDateTool.getDisplayableString(weatherForecasts.get(0).getApprovedTime())));
+                //String.format(getResources().getString(R.string.weather_approvedtime_text), StringDateTool.getDisplayableString(weatherForecasts.get(0).getApprovedTime()))
+                mAdapter = new RecyclerViewAdapter(getApplicationContext(), weatherForecasts);
                 mRecyclerView.setAdapter(mAdapter);
             }
             else{

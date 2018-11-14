@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">WeatherForecastAssignment</string>
     <string name="weather_location_hint">Location not set</string>
-    <string name="weather_title_string">Current Weather</string>
-    <string name="weather_longitude_string">Enter longitude</string>
-    <string name="weather_latitude_string">Enter latitude</string>
+    <string name="weather_longitude_string">Lon</string>
+    <string name="weather_latitude_string">Lat</string>
     <string name="weather_update_button_string">Update</string>
     <string name="weather_longitude_latitude_missing_string">Enter both longitude and latitude</string>
     <string name="weather_location_not_found_string">Location not found</string>
+    <string name="weather_approvedtime_text">Approved time: %1$s</string>
 </resources>
