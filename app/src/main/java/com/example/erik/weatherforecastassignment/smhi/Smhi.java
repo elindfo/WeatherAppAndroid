@@ -46,33 +46,25 @@ public class Smhi implements WeatherProvider {
         List<WeatherForecast> weatherForecasts = new ArrayList<>();
 
         for(TimeSeries ts : data.getTimeSeries()){
-            WeatherForecast weatherForecastTemp = new WeatherForecast();
-            WeatherForecast weatherForecastTccMean = new WeatherForecast();
+            WeatherForecast weatherForecast = new WeatherForecast();
 
-            weatherForecastTemp.setApprovedTime(data.getApprovedTime());
-            weatherForecastTccMean.setApprovedTime(data.getApprovedTime());
-            weatherForecastTemp.setValidTime(ts.getValidTime());
-            weatherForecastTccMean.setValidTime(ts.getValidTime());
-            weatherForecastTemp.setLongitude(lon);
-            weatherForecastTccMean.setLongitude(lon);
-            weatherForecastTemp.setLatitude(lat);
-            weatherForecastTccMean.setLatitude(lat);
+            weatherForecast.setApprovedTime(data.getApprovedTime());
+            weatherForecast.setValidTime(ts.getValidTime());
+            weatherForecast.setLongitude(lon);
+            weatherForecast.setLatitude(lat);
             for(Parameters p : ts.getParameters()){
                 if(p.getName().equals("t")){
-                    weatherForecastTemp.setName(p.getName());
                     if(p.getValues().length > 0){
-                        weatherForecastTemp.setValue(p.getValues()[0]);
+                        weatherForecast.setTValue(p.getValues()[0]);
                     }
                 }
                 if(p.getName().equals("tcc_mean")){
-                    weatherForecastTccMean.setName(p.getName());
                     if(p.getValues().length > 0){
-                        weatherForecastTccMean.setValue(p.getValues()[0]);
+                        weatherForecast.setTccMeanValue(p.getValues()[0]);
                     }
                 }
             }
-            weatherForecasts.add(weatherForecastTemp);
-            weatherForecasts.add(weatherForecastTccMean);
+            weatherForecasts.add(weatherForecast);
         }
         return weatherForecasts;
     }

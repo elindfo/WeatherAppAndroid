@@ -6,8 +6,8 @@ public class WeatherForecast {
 
     private String approvedTime;
     private String validTime;
-    private String name;
-    private double value;
+    private double tValue;
+    private double tccMeanValue;
     private double longitude;
     private double latitude;
 
@@ -30,20 +30,20 @@ public class WeatherForecast {
         this.validTime = validTime;
     }
 
-    public String getName() {
-        return name;
+    public double getTValue() {
+        return tValue;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTValue(double tValue) {
+        this.tValue = tValue;
     }
 
-    public double getValue() {
-        return value;
+    public double getTccMeanValue() {
+        return tccMeanValue;
     }
 
-    public void setValue(double value) {
-        this.value = value;
+    public void setTccMeanValue(double tccMeanValue) {
+        this.tccMeanValue = tccMeanValue;
     }
 
     public double getLongitude() {

@@ -37,8 +37,8 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
             WeatherEntity weatherEntity = new WeatherEntity(
                     weatherForecast.getApprovedTime(),
                     weatherForecast.getValidTime(),
-                    weatherForecast.getName(),
-                    weatherForecast.getValue(),
+                    weatherForecast.getTValue(),
+                    weatherForecast.getTccMeanValue(),
                     weatherForecast.getLongitude(),
                     weatherForecast.getLatitude(),
                     timestamp

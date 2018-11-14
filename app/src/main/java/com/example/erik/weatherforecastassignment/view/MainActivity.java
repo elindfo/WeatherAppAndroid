@@ -1,13 +1,15 @@
-package com.example.erik.weatherforecastassignment;
+package com.example.erik.weatherforecastassignment.view;
 
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.erik.weatherforecastassignment.R;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherModel;
 
@@ -17,9 +19,10 @@ public class MainActivity extends AppCompatActivity {
 
     private WeatherModel weatherModel;
 
-    private TextView weatherLocationText;
-    private TextView weatherTemperatureText;
-    private TextView weatherApprovedTimeText;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     private EditText longitudeInputField;
     private EditText latitudeInputField;
     private Button updateButton;
@@ -29,14 +32,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        weatherLocationText = findViewById(R.id.weather_location);
-        weatherTemperatureText = findViewById(R.id.weather_temperature);
-        weatherApprovedTimeText = findViewById(R.id.weather_approved_time);
+        weatherModel = WeatherModel.getInstance();
+
+        mRecyclerView = findViewById(R.id.weather_recycler_view);
         longitudeInputField = findViewById(R.id.weather_longitude);
         latitudeInputField = findViewById(R.id.weather_latitude);
         updateButton = findViewById(R.id.weather_update_button);
 
-        weatherModel = WeatherModel.getInstance();
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
         updateButton.setOnClickListener((view) -> {
             //TODO Make async
@@ -58,15 +62,13 @@ public class MainActivity extends AppCompatActivity {
             if(weatherForecasts.size() > 0){
                 System.out.println("Approved Time: " + weatherForecasts.get(0).getApprovedTime());
                 System.out.println("Valid Time: " + weatherForecasts.get(0).getValidTime());
-                System.out.println("Name: " + weatherForecasts.get(0).getName());
-                System.out.println("Value: " + weatherForecasts.get(0).getValue());
+                System.out.println("Temperature: " + weatherForecasts.get(0).getTValue());
+                System.out.println("Tcc: " + weatherForecasts.get(0).getTccMeanValue());
                 System.out.println("Longitude: " + weatherForecasts.get(0).getLongitude());
                 System.out.println("Latitude: " + weatherForecasts.get(0).getLatitude());
                 System.out.println();
             }
-            else{
-                weatherLocationText.setText(getResources().getString(R.string.weather_location_not_found_string));
-            }
+
             super.onPostExecute(weatherForecasts);
         }
 
