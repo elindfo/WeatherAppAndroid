@@ -5,7 +5,11 @@ import java.util.List;
 public class WeatherForecast {
 
     private String approvedTime;
-    private List<HourlyForecastData> hourlyForecastData;
+    private String validTime;
+    private String name;
+    private double value;
+    private double longitude;
+    private double latitude;
 
     public WeatherForecast() {
     }
@@ -14,15 +18,47 @@ public class WeatherForecast {
         return approvedTime;
     }
 
-    public List<HourlyForecastData> getHourlyForecastData() {
-        return hourlyForecastData;
-    }
-
     public void setApprovedTime(String approvedTime) {
         this.approvedTime = approvedTime;
     }
 
-    public void setHourlyForecastData(List<HourlyForecastData> hourlyForecastData) {
-        this.hourlyForecastData = hourlyForecastData;
+    public String getValidTime() {
+        return validTime;
+    }
+
+    public void setValidTime(String validTime) {
+        this.validTime = validTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 }

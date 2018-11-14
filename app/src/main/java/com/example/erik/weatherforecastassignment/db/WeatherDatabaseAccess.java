@@ -4,9 +4,11 @@ import android.arch.persistence.room.Room;
 
 import com.example.erik.weatherforecastassignment.model.ApplicationContextProvider;
 import com.example.erik.weatherforecastassignment.model.DatabaseAccess;
-import com.example.erik.weatherforecastassignment.model.HourlyForecastData;
-import com.example.erik.weatherforecastassignment.model.HourlyForecastDataParameters;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class WeatherDatabaseAccess implements DatabaseAccess {
 
@@ -28,21 +30,22 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     }
 
     @Override
-    public void addWeatherData(WeatherForecast weatherForecast) {
-        System.out.println("ADDWEATHERDATA");
-        WeatherEntity weatherEntity = new WeatherEntity();
-        weatherEntity.setApprovedTime(weatherForecast.getApprovedTime());
-        for(HourlyForecastData hfd : weatherForecast.getHourlyForecastData()){
-            for(HourlyForecastDataParameters hfdp : hfd.getHourlyForecastDataParameters()){
-                if(hfdp.getName().equals("t")){
-                    weatherEntity.setValidTime(hfd.getValidTime());
-                    weatherEntity.setTemperature(hfdp.getValues()[0]);
-                }
-                if(hfdp.getName().equals("tcc_mean")){
-                    weatherEntity.setTccMean(hfdp.getValues()[0]);
-                }
-            }
+    public void addWeatherForecasts(List<WeatherForecast> weatherForecasts) {
+        List<WeatherEntity> weatherEntities = new ArrayList<>();
+        Date timestamp = new Date();
+        for(WeatherForecast weatherForecast : weatherForecasts){
+            WeatherEntity weatherEntity = new WeatherEntity(
+                    weatherForecast.getApprovedTime(),
+                    weatherForecast.getValidTime(),
+                    weatherForecast.getName(),
+                    weatherForecast.getValue(),
+                    weatherForecast.getLongitude(),
+                    weatherForecast.getLatitude(),
+                    timestamp
+            );
+            weatherEntities.add(weatherEntity);
         }
-        weatherDatabase.weatherDao().insertAll(weatherEntity);
+
+        weatherDatabase.weatherDao().insertAll(weatherEntities);
     }
 }

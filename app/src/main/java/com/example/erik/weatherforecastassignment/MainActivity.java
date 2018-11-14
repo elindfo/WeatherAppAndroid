@@ -8,10 +8,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.erik.weatherforecastassignment.model.HourlyForecastData;
-import com.example.erik.weatherforecastassignment.model.HourlyForecastDataParameters;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherModel;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,40 +51,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private class UpdateWeatherAsyncTask extends AsyncTask<String, Void, WeatherForecast>{
+    private class UpdateWeatherAsyncTask extends AsyncTask<String, Void, List<WeatherForecast>>{
 
         @Override
-        protected void onPostExecute(WeatherForecast weatherForecast) {
-            if(weatherForecast != null){
-                System.out.println("Approved Time: " + weatherForecast.getApprovedTime());
+        protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
+            if(weatherForecasts.size() > 0){
+                System.out.println("Approved Time: " + weatherForecasts.get(0).getApprovedTime());
+                System.out.println("Valid Time: " + weatherForecasts.get(0).getValidTime());
+                System.out.println("Name: " + weatherForecasts.get(0).getName());
+                System.out.println("Value: " + weatherForecasts.get(0).getValue());
+                System.out.println("Longitude: " + weatherForecasts.get(0).getLongitude());
+                System.out.println("Latitude: " + weatherForecasts.get(0).getLatitude());
                 System.out.println();
-                for(HourlyForecastData hfd : weatherForecast.getHourlyForecastData()){
-                    System.out.println("Valid time: " + hfd.getValidTime());
-                    for(HourlyForecastDataParameters hfdp : hfd.getHourlyForecastDataParameters()){
-                        if(hfdp.getName().equals("t")){
-                            System.out.println("Name: " + hfdp.getName());
-                            System.out.println("Unit: " + hfdp.getUnit());
-                            System.out.print("Values: ");
-                            for(double d : hfdp.getValues()){
-                                System.out.print(d + " ");
-                            }
-                            System.out.println();
-                            System.out.println();
-                        }
-                    }
-                }
             }
             else{
                 weatherLocationText.setText(getResources().getString(R.string.weather_location_not_found_string));
             }
-            super.onPostExecute(weatherForecast);
+            super.onPostExecute(weatherForecasts);
         }
 
         @Override
-        protected WeatherForecast doInBackground(String... strings) {
-            WeatherForecast weatherForecast = weatherModel
-                    .getWeatherForecast(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
-            return weatherForecast;
+        protected List<WeatherForecast> doInBackground(String... strings) {
+            List<WeatherForecast> weatherForecasts = weatherModel
+                    .getWeatherForecasts(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
+            return weatherForecasts;
         }
     }
 }

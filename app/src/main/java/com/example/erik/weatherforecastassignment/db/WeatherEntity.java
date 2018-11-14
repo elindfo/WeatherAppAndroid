@@ -4,8 +4,11 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity
+import java.util.Date;
+
+@Entity()
 public class WeatherEntity {
+
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -15,11 +18,30 @@ public class WeatherEntity {
     @ColumnInfo(name = "valid_time")
     private String validTime;
 
-    @ColumnInfo(name = "t")
-    private double temperature;
+    @ColumnInfo(name = "name")
+    private String name;
 
-    @ColumnInfo(name = "tcc_mean")
-    private double tccMean;
+    @ColumnInfo(name = "value")
+    private double value;
+
+    @ColumnInfo(name = "longitude")
+    private double longitude;
+
+    @ColumnInfo(name = "latitude")
+    private double latitude;
+
+    @ColumnInfo(name = "timestamp")
+    private Date timestamp;
+
+    public WeatherEntity(String approvedTime, String validTime, String name, double value, double longitude, double latitude, Date timestamp) {
+        this.approvedTime = approvedTime;
+        this.validTime = validTime;
+        this.name = name;
+        this.value = value;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.timestamp = timestamp;
+    }
 
     public int getId() {
         return id;
@@ -45,19 +67,43 @@ public class WeatherEntity {
         this.validTime = validTime;
     }
 
-    public double getTemperature() {
-        return temperature;
+    public String getName() {
+        return name;
     }
 
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public double getTccMean() {
-        return tccMean;
+    public double getValue() {
+        return value;
     }
 
-    public void setTccMean(double tccMean) {
-        this.tccMean = tccMean;
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 }

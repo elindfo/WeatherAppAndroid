@@ -3,6 +3,8 @@ package com.example.erik.weatherforecastassignment.model;
 import com.example.erik.weatherforecastassignment.db.WeatherDatabaseAccess;
 import com.example.erik.weatherforecastassignment.smhi.Smhi;
 
+import java.util.List;
+
 public class WeatherModel {
 
     private static WeatherModel weatherModel;
@@ -22,9 +24,11 @@ public class WeatherModel {
         return weatherModel;
     }
 
-    public WeatherForecast getWeatherForecast(double lon, double lat){
-        WeatherForecast weatherForecast = weatherProvider.getWeatherForecastByCoord(lon, lat);
-        weatherDatabaseAccess.addWeatherData(weatherForecast);
-        return weatherForecast;
+    public List<WeatherForecast> getWeatherForecasts(double lon, double lat){
+        List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(lon, lat);
+        if(weatherForecasts.size() > 0){
+            weatherDatabaseAccess.addWeatherForecasts(weatherForecasts);
+        }
+        return weatherForecasts;
     }
 }

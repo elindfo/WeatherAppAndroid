@@ -1,7 +1,5 @@
 package com.example.erik.weatherforecastassignment.smhi;
 
-import com.example.erik.weatherforecastassignment.model.HourlyForecastData;
-import com.example.erik.weatherforecastassignment.model.HourlyForecastDataParameters;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherProvider;
 import com.google.gson.Gson;
@@ -37,7 +35,7 @@ public class Smhi implements WeatherProvider {
     }
 
     @Override
-    public WeatherForecast getWeatherForecastByCoord(double lon, double lat){
+    public List<WeatherForecast> getWeatherForecastsByCoord(double lon, double lat){
         String requestUrl = "https://maceo.sth.kth.se/api/category/pmp3g/version/2/geotype/point/lon/" + lon + "/lat/" + lat + "/";
         WeatherData data = smhiRequest.getWeatherData(requestUrl);
 
@@ -45,27 +43,38 @@ public class Smhi implements WeatherProvider {
             return null;
         }
 
-        WeatherForecast weatherForecast = new WeatherForecast();
-        weatherForecast.setApprovedTime(data.getApprovedTime());
+        List<WeatherForecast> weatherForecasts = new ArrayList<>();
 
-        List<HourlyForecastData> hourlyForecastDataList = new ArrayList<>();
         for(TimeSeries ts : data.getTimeSeries()){
-            HourlyForecastData hourlyForecastData = new HourlyForecastData();
-            hourlyForecastData.setValidTime(ts.getValidTime());
-            List<HourlyForecastDataParameters> hourlyForecastDataParametersList = new ArrayList<>();
-            for(Parameters p : ts.getParameters()){
-                HourlyForecastDataParameters hourlyForecastDataParameters = new HourlyForecastDataParameters();
-                hourlyForecastDataParameters.setName(p.getName());
-                hourlyForecastDataParameters.setUnit(p.getUnit());
-                hourlyForecastDataParameters.setValues(p.getValues());
-                hourlyForecastDataParametersList.add(hourlyForecastDataParameters);
-            }
-            hourlyForecastData.setHourlyForecastDataParameters(hourlyForecastDataParametersList);
-            hourlyForecastDataList.add(hourlyForecastData);
-        }
-        weatherForecast.setHourlyForecastData(hourlyForecastDataList);
+            WeatherForecast weatherForecastTemp = new WeatherForecast();
+            WeatherForecast weatherForecastTccMean = new WeatherForecast();
 
-        return weatherForecast;
+            weatherForecastTemp.setApprovedTime(data.getApprovedTime());
+            weatherForecastTccMean.setApprovedTime(data.getApprovedTime());
+            weatherForecastTemp.setValidTime(ts.getValidTime());
+            weatherForecastTccMean.setValidTime(ts.getValidTime());
+            weatherForecastTemp.setLongitude(lon);
+            weatherForecastTccMean.setLongitude(lon);
+            weatherForecastTemp.setLatitude(lat);
+            weatherForecastTccMean.setLatitude(lat);
+            for(Parameters p : ts.getParameters()){
+                if(p.getName().equals("t")){
+                    weatherForecastTemp.setName(p.getName());
+                    if(p.getValues().length > 0){
+                        weatherForecastTemp.setValue(p.getValues()[0]);
+                    }
+                }
+                if(p.getName().equals("tcc_mean")){
+                    weatherForecastTccMean.setName(p.getName());
+                    if(p.getValues().length > 0){
+                        weatherForecastTccMean.setValue(p.getValues()[0]);
+                    }
+                }
+            }
+            weatherForecasts.add(weatherForecastTemp);
+            weatherForecasts.add(weatherForecastTccMean);
+        }
+        return weatherForecasts;
     }
 
     private class SmhiRequest{
