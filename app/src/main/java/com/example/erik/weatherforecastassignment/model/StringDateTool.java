@@ -1,7 +1,5 @@
 package com.example.erik.weatherforecastassignment.model;
 
-import android.util.Log;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,6 +17,13 @@ public class StringDateTool {
 
         } catch (ParseException e) {}
         return null;
+    }
+
+    public static String getISO8601StringFromDate(Date date){
+        TimeZone tz = TimeZone.getTimeZone("Europe/Stockholm");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        df.setTimeZone(tz);
+        return df.format(date);
     }
 
     public static String getDisplayableStringFromDate(Date d){

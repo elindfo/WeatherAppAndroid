@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.erik.weatherforecastassignment.model.ApplicationContextProvider;
 import com.example.erik.weatherforecastassignment.model.DatabaseAccess;
+import com.example.erik.weatherforecastassignment.model.StringDateTool;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 
 import java.util.ArrayList;
@@ -32,22 +33,8 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
 
     @Override
     public void addWeatherForecasts(List<WeatherForecast> weatherForecasts) {
-        List<WeatherEntity> weatherEntities = new ArrayList<>();
-        for(WeatherForecast weatherForecast : weatherForecasts){
-            WeatherEntity weatherEntity = new WeatherEntity(
-                    weatherForecast.getApprovedTime(),
-                    weatherForecast.getValidTime(),
-                    weatherForecast.getTValue(),
-                    weatherForecast.getTccMeanValue(),
-                    weatherForecast.getWsymb2(),
-                    weatherForecast.getLongitude(),
-                    weatherForecast.getLatitude(),
-                    new Date()
-            );
-            weatherEntities.add(weatherEntity);
-        }
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecasts: Adding " + weatherEntities.size() + " new WeatherEntities to database");
-        weatherDatabase.weatherDao().insertAll(weatherEntities);
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": addWeatherForecasts: Adding " + weatherForecasts.size() + " new WeatherEntities to database");
+        weatherDatabase.weatherDao().insertAll(convertFromWeatherForecastList(weatherForecasts));
     }
 
     @Override
@@ -61,12 +48,37 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
         return convertFromWeatherEnityList(weatherEntities);
     }
 
+    @Override
+    public void deleteAndInsertAll(List<WeatherForecast> weatherForecasts) {
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": deleteAndInsertAll: Deleting and inserting forecasts");
+        weatherDatabase.weatherDao().deleteAndInsertAll(convertFromWeatherForecastList(weatherForecasts));
+    }
+
+    private List<WeatherEntity> convertFromWeatherForecastList(List<WeatherForecast> weatherForecasts){
+        List<WeatherEntity> weatherEntities = new ArrayList<>();
+        Date date = new Date();
+        for(WeatherForecast weatherForecast : weatherForecasts){
+            WeatherEntity weatherEntity = new WeatherEntity(
+                    StringDateTool.getISO8601StringFromDate(weatherForecast.getApprovedTime()),
+                    StringDateTool.getISO8601StringFromDate(weatherForecast.getValidTime()),
+                    weatherForecast.getTValue(),
+                    weatherForecast.getTccMeanValue(),
+                    weatherForecast.getWsymb2(),
+                    weatherForecast.getLongitude(),
+                    weatherForecast.getLatitude(),
+                    date
+            );
+            weatherEntities.add(weatherEntity);
+        }
+        return weatherEntities;
+    }
+
     private List<WeatherForecast> convertFromWeatherEnityList(List<WeatherEntity> weatherEntities){
         List<WeatherForecast> weatherForecasts = new ArrayList<>();
         for(WeatherEntity we : weatherEntities){
             WeatherForecast wf = new WeatherForecast();
-            wf.setApprovedTime(we.getApprovedTime());
-            wf.setValidTime(we.getValidTime());
+            wf.setApprovedTime(StringDateTool.getDateFromISO8601String(we.getApprovedTime()));
+            wf.setValidTime(StringDateTool.getDateFromISO8601String(we.getValidTime()));
             wf.setTValue(we.getTValue());
             wf.setTccMeanValue(we.getTccMeanValue());
             wf.setWsymb2(we.getWsymb2());

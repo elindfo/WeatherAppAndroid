@@ -13,10 +13,10 @@ public class WeatherEntity {
     private int id;
 
     @ColumnInfo(name = "approved_time")
-    private Date approvedTime;
+    private String approvedTime;
 
     @ColumnInfo(name = "valid_time")
-    private Date validTime;
+    private String validTime;
 
     @ColumnInfo(name = "t_value")
     private double tValue;
@@ -36,7 +36,7 @@ public class WeatherEntity {
     @ColumnInfo(name = "timestamp")
     private Date timestamp;
 
-    public WeatherEntity(Date approvedTime, Date validTime, double tValue, double tccMeanValue, int wsymb2, double longitude, double latitude, Date timestamp) {
+    public WeatherEntity(String approvedTime, String validTime, double tValue, double tccMeanValue, int wsymb2, double longitude, double latitude, Date timestamp) {
         this.approvedTime = approvedTime;
         this.validTime = validTime;
         this.tValue = tValue;
@@ -55,19 +55,19 @@ public class WeatherEntity {
         this.id = id;
     }
 
-    public Date getApprovedTime() {
+    public String getApprovedTime() {
         return approvedTime;
     }
 
-    public void setApprovedTime(Date approvedTime) {
+    public void setApprovedTime(String approvedTime) {
         this.approvedTime = approvedTime;
     }
 
-    public Date getValidTime() {
+    public String getValidTime() {
         return validTime;
     }
 
-    public void setValidTime(Date validTime) {
+    public void setValidTime(String validTime) {
         this.validTime = validTime;
     }
 

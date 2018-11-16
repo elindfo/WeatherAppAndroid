@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class UpdateWeatherAsyncTask extends AsyncTask<String, Void, List<WeatherForecast>>{
-
         @Override
         protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
             if(weatherForecasts != null && weatherForecasts.size() > 0){
@@ -89,8 +88,18 @@ public class MainActivity extends AppCompatActivity {
         protected List<WeatherForecast> doInBackground(String... strings) {
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: Fetching forecasts for lon " + strings[0] + ", lat " + strings[1]);
             List<WeatherForecast> weatherForecasts = weatherModel
-                    .getWeatherForecasts(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
+                    .getWeatherForecastsByCoordinates(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
             return weatherForecasts;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }

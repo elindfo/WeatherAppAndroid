@@ -28,26 +28,24 @@ public class WeatherModel {
         return weatherModel;
     }
 
-    public List<WeatherForecast> getWeatherForecasts(double lon, double lat){
+    public List<WeatherForecast> getWeatherForecastsByCoordinates(double lon, double lat){
         //TODO Get from database if time < 1h, else get from SMHI api
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecasts: Fetching forecasts for lon " + lon + ", lat " + lat);
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: Fetching forecasts for lon " + lon + ", lat " + lat);
         List<WeatherForecast> weatherForecasts;
         Date lastApprovedTime = weatherDatabaseAccess.findLatestEntryTimeByLongitudeAndLatitude(lon, lat);
         lastApprovedTime = lastApprovedTime == null ? new Date(0) : lastApprovedTime;
         Date currentTime = new Date();
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecasts: time passed " + (currentTime.getTime() - lastApprovedTime.getTime()));
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: time passed " + (currentTime.getTime() - lastApprovedTime.getTime()));
         if(currentTime.getTime() - lastApprovedTime.getTime() > 3600000){
             //If more than an hour has passed
             Log.d("WeatherForecastAssignment", this.getClass()
-                            .getSimpleName() + ": getWeatherForecasts: More than an hour passed since last call to location. Fetching data from API");
+                            .getSimpleName() + ": getWeatherForecastsByCoordinates: More than an hour passed since last call to location. Fetching data from API");
             weatherForecasts = weatherProvider.getWeatherForecastsByCoord(lon, lat);
-
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecasts: Attempting to add API fetched data to database");
-            weatherDatabaseAccess.addWeatherForecasts(weatherForecasts);
+            weatherDatabaseAccess.deleteAndInsertAll(weatherForecasts);
         }
         else{
             Log.d("WeatherForecastAssignment", this.getClass()
-                    .getSimpleName() + ": getWeatherForecasts: Less than an hour passed since last call to location. Fetching data from database");
+                    .getSimpleName() + ": getWeatherForecastsByCoordinates: Less than an hour passed since last call to location. Fetching data from database");
             weatherForecasts = weatherDatabaseAccess.findLatestForecastsByLongitudeAndLatitude(lon, lat);
         }
         return weatherForecasts;

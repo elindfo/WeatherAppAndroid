@@ -8,4 +8,5 @@ public interface DatabaseAccess {
     void addWeatherForecasts(List<WeatherForecast> weatherForecasts);
     Date findLatestEntryTimeByLongitudeAndLatitude(double longitude, double latitude);
     List<WeatherForecast> findLatestForecastsByLongitudeAndLatitude(double longitude, double latitude);
+    void deleteAndInsertAll(List<WeatherForecast> weatherForecasts);
 }
