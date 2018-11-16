@@ -13,11 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erik.weatherforecastassignment.R;
+import com.example.erik.weatherforecastassignment.model.StringDateTool;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherModel;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.example.erik.weatherforecastassignment.model.ApplicationContextProvider.getContext;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating recyclerView");
                 approvedTime.setText(String.format(getResources()
                         .getString(R.string.weather_approvedtime_text),
-                        StringDateTool.getDisplayableString(weatherForecasts.get(0).getApprovedTime())));
+                        StringDateTool.getDisplayableStringFromDate(weatherForecasts.get(0).getApprovedTime())));
                 //String.format(getResources().getString(R.string.weather_approvedtime_text), StringDateTool.getDisplayableString(weatherForecasts.get(0).getApprovedTime()))
                 mAdapter = new RecyclerViewAdapter(getApplicationContext(), weatherForecasts);
                 mRecyclerView.setAdapter(mAdapter);

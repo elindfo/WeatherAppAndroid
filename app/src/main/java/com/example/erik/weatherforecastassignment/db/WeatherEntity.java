@@ -13,10 +13,10 @@ public class WeatherEntity {
     private int id;
 
     @ColumnInfo(name = "approved_time")
-    private String approvedTime;
+    private Date approvedTime;
 
     @ColumnInfo(name = "valid_time")
-    private String validTime;
+    private Date validTime;
 
     @ColumnInfo(name = "t_value")
     private double tValue;
@@ -33,10 +33,7 @@ public class WeatherEntity {
     @ColumnInfo(name = "latitude")
     private double latitude;
 
-    @ColumnInfo(name = "timestamp")
-    private Date timestamp;
-
-    public WeatherEntity(String approvedTime, String validTime, double tValue, double tccMeanValue, int wsymb2, double longitude, double latitude, Date timestamp) {
+    public WeatherEntity(Date approvedTime, Date validTime, double tValue, double tccMeanValue, int wsymb2, double longitude, double latitude) {
         this.approvedTime = approvedTime;
         this.validTime = validTime;
         this.tValue = tValue;
@@ -44,7 +41,6 @@ public class WeatherEntity {
         this.wsymb2 = wsymb2;
         this.longitude = longitude;
         this.latitude = latitude;
-        this.timestamp = timestamp;
     }
 
     public int getId() {
@@ -55,19 +51,19 @@ public class WeatherEntity {
         this.id = id;
     }
 
-    public String getApprovedTime() {
+    public Date getApprovedTime() {
         return approvedTime;
     }
 
-    public void setApprovedTime(String approvedTime) {
+    public void setApprovedTime(Date approvedTime) {
         this.approvedTime = approvedTime;
     }
 
-    public String getValidTime() {
+    public Date getValidTime() {
         return validTime;
     }
 
-    public void setValidTime(String validTime) {
+    public void setValidTime(Date validTime) {
         this.validTime = validTime;
     }
 
@@ -109,13 +105,5 @@ public class WeatherEntity {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
-    }
-
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
     }
 }

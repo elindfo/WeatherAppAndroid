@@ -1,11 +1,12 @@
 package com.example.erik.weatherforecastassignment.model;
 
+import java.util.Date;
 import java.util.List;
 
 public class WeatherForecast {
 
-    private String approvedTime;
-    private String validTime;
+    private Date approvedTime;
+    private Date validTime;
     private double tValue;
     private double tccMeanValue;
     private int wsymb2;
@@ -15,19 +16,19 @@ public class WeatherForecast {
     public WeatherForecast() {
     }
 
-    public String getApprovedTime() {
+    public Date getApprovedTime() {
         return approvedTime;
     }
 
-    public void setApprovedTime(String approvedTime) {
+    public void setApprovedTime(Date approvedTime) {
         this.approvedTime = approvedTime;
     }
 
-    public String getValidTime() {
+    public Date getValidTime() {
         return validTime;
     }
 
-    public void setValidTime(String validTime) {
+    public void setValidTime(Date validTime) {
         this.validTime = validTime;
     }
 

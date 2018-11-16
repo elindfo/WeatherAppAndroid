@@ -1,7 +1,6 @@
 package com.example.erik.weatherforecastassignment.view;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.erik.weatherforecastassignment.R;
+import com.example.erik.weatherforecastassignment.model.StringDateTool;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 
 import java.util.List;
@@ -41,13 +41,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Log.d("RecyclerViewAdapter", "onBindViewHolder: called");
         viewHolder.temperature.setText(String.valueOf(weatherForecasts.get(i).getTValue()));
-        viewHolder.time.setText(StringDateTool.getDisplayableString(weatherForecasts.get(i).getValidTime()));
+        viewHolder.time.setText(StringDateTool.getDisplayableStringFromDate(weatherForecasts.get(i).getValidTime()));
 
         setWeatherImage(viewHolder, i);
     }
 
     private void setWeatherImage(ViewHolder viewHolder, int i){
-        int hour = StringDateTool.getHour(weatherForecasts.get(i).getValidTime());
+        int hour = StringDateTool.getHourFromDate(weatherForecasts.get(i).getValidTime());
         boolean dayTime = false;
         switch(hour){
             //DayTime

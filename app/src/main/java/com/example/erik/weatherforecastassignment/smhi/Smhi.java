@@ -2,6 +2,7 @@ package com.example.erik.weatherforecastassignment.smhi;
 
 import android.util.Log;
 
+import com.example.erik.weatherforecastassignment.model.StringDateTool;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherProvider;
 import com.google.gson.Gson;
@@ -59,8 +60,8 @@ public class Smhi implements WeatherProvider {
 
         for(TimeSeries ts : data.getTimeSeries()){
             WeatherForecast weatherForecast = new WeatherForecast();
-            weatherForecast.setApprovedTime(data.getApprovedTime());
-            weatherForecast.setValidTime(ts.getValidTime());
+            weatherForecast.setApprovedTime(StringDateTool.getDateFromISO8601String(data.getApprovedTime()));
+            weatherForecast.setValidTime(StringDateTool.getDateFromISO8601String(ts.getValidTime()));
             weatherForecast.setLongitude(lon);
             weatherForecast.setLatitude(lat);
             for(Parameters p : ts.getParameters()){

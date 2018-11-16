@@ -33,7 +33,6 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     @Override
     public void addWeatherForecasts(List<WeatherForecast> weatherForecasts) {
         List<WeatherEntity> weatherEntities = new ArrayList<>();
-        Date timestamp = new Date();
         for(WeatherForecast weatherForecast : weatherForecasts){
             WeatherEntity weatherEntity = new WeatherEntity(
                     weatherForecast.getApprovedTime(),
@@ -42,8 +41,7 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
                     weatherForecast.getTccMeanValue(),
                     weatherForecast.getWsymb2(),
                     weatherForecast.getLongitude(),
-                    weatherForecast.getLatitude(),
-                    timestamp
+                    weatherForecast.getLatitude()
             );
             weatherEntities.add(weatherEntity);
         }
