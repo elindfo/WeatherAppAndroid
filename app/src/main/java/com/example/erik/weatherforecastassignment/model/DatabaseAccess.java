@@ -6,7 +6,10 @@ import java.util.List;
 public interface DatabaseAccess {
 
     void addWeatherForecasts(List<WeatherForecast> weatherForecasts);
-    Date findLatestEntryTimeByLongitudeAndLatitude(double longitude, double latitude);
+    Date findLatestEntryTime();
     List<WeatherForecast> findLatestForecastsByLongitudeAndLatitude(double longitude, double latitude);
     void deleteAndInsertAll(List<WeatherForecast> weatherForecasts);
+    List<WeatherForecast> getAll();
+    WeatherForecast getLast();
+    Date findLatestEntryTimeByLongitudeAndLatitude(double lon, double lat);
 }

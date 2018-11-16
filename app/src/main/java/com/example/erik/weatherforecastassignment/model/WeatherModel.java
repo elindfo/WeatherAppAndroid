@@ -31,23 +31,54 @@ public class WeatherModel {
     public List<WeatherForecast> getWeatherForecastsByCoordinates(double lon, double lat){
         //TODO Get from database if time < 1h, else get from SMHI api
         Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: Fetching forecasts for lon " + lon + ", lat " + lat);
-        List<WeatherForecast> weatherForecasts;
-        Date lastApprovedTime = weatherDatabaseAccess.findLatestEntryTimeByLongitudeAndLatitude(lon, lat);
-        lastApprovedTime = lastApprovedTime == null ? new Date(0) : lastApprovedTime;
-        Date currentTime = new Date();
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: time passed " + (currentTime.getTime() - lastApprovedTime.getTime()));
-        if(currentTime.getTime() - lastApprovedTime.getTime() > 3600000){
-            //If more than an hour has passed
+        List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(lon, lat);
+        weatherDatabaseAccess.deleteAndInsertAll(weatherForecasts);
+        return weatherForecasts;
+    }
+
+    public List<WeatherForecast> getLastUpdatedWeatherForecasts(NetworkStatus.Status status) {
+
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: Fetching forecasts");
+
+        Date latestEntryTime = weatherDatabaseAccess.findLatestEntryTime();
+        latestEntryTime = latestEntryTime == null ? new Date(0) : latestEntryTime;
+        long latestEntryTimeInMillis = latestEntryTime.getTime();
+
+        if(latestEntryTimeInMillis <= 0){ //No earlier search made so wont be able to update from API or DB
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: No earlier search made, returning 0 forecasts");
+            return new ArrayList<>();
+        }
+
+        long currentTimeInMillis = new Date().getTime();
+        long timeLimit = 0;
+        switch(status){
+            case WIFI:{ //Older than 10 minues
+                timeLimit = 600000;
+                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: On WIFI, timelimit set to " + timeLimit);
+                break;
+            }
+            case MOBILE:{ //Older than 60 minutes
+                timeLimit = 3600000;
+                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: On MOBILE, timelimit set to " + timeLimit);
+                break;
+            }
+            case NO_CONNECTION:{ //Unable to fetch, if no stored data, return empty array
+                return weatherDatabaseAccess.getAll();
+            }
+        }
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: Time difference: " + (currentTimeInMillis - latestEntryTimeInMillis));
+        if(currentTimeInMillis - latestEntryTimeInMillis > timeLimit){
             Log.d("WeatherForecastAssignment", this.getClass()
-                            .getSimpleName() + ": getWeatherForecastsByCoordinates: More than an hour passed since last call to location. Fetching data from API");
-            weatherForecasts = weatherProvider.getWeatherForecastsByCoord(lon, lat);
+                    .getSimpleName() + ": getLastUpdatedWeatherForecasts: Timelimit " + timeLimit / 60000 + " minutes exceeded, fetching data from API");
+            WeatherForecast weatherForecast = weatherDatabaseAccess.getLast();
+            List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(weatherForecast.getLongitude(), weatherForecast.getLatitude());
             weatherDatabaseAccess.deleteAndInsertAll(weatherForecasts);
+            return weatherForecasts;
         }
         else{
             Log.d("WeatherForecastAssignment", this.getClass()
-                    .getSimpleName() + ": getWeatherForecastsByCoordinates: Less than an hour passed since last call to location. Fetching data from database");
-            weatherForecasts = weatherDatabaseAccess.findLatestForecastsByLongitudeAndLatitude(lon, lat);
+                    .getSimpleName() + ": getWeatherForecastsByCoordinates: Timelimit " + timeLimit / 60000 + " minutes NOT exceeded, fetching data from database");
+            return weatherDatabaseAccess.getAll();
         }
-        return weatherForecasts;
     }
 }

@@ -25,8 +25,8 @@ public abstract class WeatherDao {
     @Query("DELETE FROM WeatherEntity")
     abstract void deleteAll();
 
-    @Query("SELECT MAX(timestamp) FROM WeatherEntity WHERE longitude = :longitude AND latitude = :latitude;")
-    abstract Date findLatestEntryTimeByLongitudeAndLatitude(double longitude, double latitude);
+    @Query("SELECT MAX(timestamp) FROM WeatherEntity;")
+    abstract Date findLatestEntryTime();
 
     @Transaction
     void deleteAndInsertAll(List<WeatherEntity> weatherEntities){
@@ -34,6 +34,15 @@ public abstract class WeatherDao {
         insertAll(weatherEntities);
     }
 
+    @Query("SELECT * FROM WeatherEntity LIMIT 1")
+    abstract WeatherEntity getEntry();
+
     @Query("SELECT * FROM WeatherEntity WHERE longitude = :longitude AND latitude = :latitude AND timestamp = (SELECT MAX(timestamp) FROM WeatherEntity WHERE longitude = :longitude AND latitude = :latitude);")
     abstract List<WeatherEntity> findLatestForecastsByLongitudeAndLatitude(double longitude, double latitude);
+
+    @Query("SELECT * FROM WeatherEntity;")
+    abstract List<WeatherEntity> findAll();
+
+    @Query("SELECT MAX(timestamp) FROM WeatherEntity WHERE longitude = :lon AND latitude = :lat;")
+    public abstract Date findLatestEntryTimeLongitudeAndLatitude(double lon, double lat);
 }

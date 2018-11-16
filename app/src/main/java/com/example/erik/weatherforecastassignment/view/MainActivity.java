@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erik.weatherforecastassignment.R;
+import com.example.erik.weatherforecastassignment.model.NetworkStatus;
 import com.example.erik.weatherforecastassignment.model.StringDateTool;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherModel;
@@ -62,12 +63,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, getResources().getString(R.string.weather_longitude_latitude_missing_string), Toast.LENGTH_SHORT).show();
             }
             else{
-                new UpdateWeatherAsyncTask().execute(longitude, latitude);
+                new GetWeatherByCoordAsyncTask().execute(longitude, latitude);
             }
         });
     }
 
-    private class UpdateWeatherAsyncTask extends AsyncTask<String, Void, List<WeatherForecast>>{
+    private class GetWeatherByCoordAsyncTask extends AsyncTask<String, Void, List<WeatherForecast>>{
         @Override
         protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
             if(weatherForecasts != null && weatherForecasts.size() > 0){
@@ -93,8 +94,44 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class GetLastUpdatedWeatherAsyncTask extends AsyncTask<NetworkStatus.Status, Void, List<WeatherForecast>>{
+
+        private NetworkStatus.Status status;
+
+        @Override
+        protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
+            if(weatherForecasts != null && weatherForecasts.size() > 0){
+                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating recyclerView");
+                approvedTime.setText(String.format(getResources()
+                                .getString(R.string.weather_approvedtime_text),
+                        StringDateTool.getDisplayableStringFromDate(weatherForecasts.get(0).getApprovedTime())));
+                mAdapter = new RecyclerViewAdapter(getApplicationContext(), weatherForecasts);
+                mRecyclerView.setAdapter(mAdapter);
+                if(status == NetworkStatus.Status.NO_CONNECTION){
+                    Toast.makeText(MainActivity.this, "No internet connection. Data may be outdated.", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else{
+                Toast.makeText(MainActivity.this, "No weather history found", Toast.LENGTH_SHORT).show();
+            }
+            super.onPostExecute(weatherForecasts);
+        }
+
+        @Override
+        protected List<WeatherForecast> doInBackground(NetworkStatus.Status... networkStatus) {
+            status = networkStatus[0];
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: networkStatus: " + status + " - Loading previous data");
+            List<WeatherForecast> weatherForecasts = weatherModel
+                    .getLastUpdatedWeatherForecasts(status);
+            return weatherForecasts;
+        }
+    }
+
     @Override
     protected void onStart() {
+        NetworkStatus.Status status = NetworkStatus.getStatus();
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onStart: " + status);
+        new GetLastUpdatedWeatherAsyncTask().execute(status);
         super.onStart();
     }
 
