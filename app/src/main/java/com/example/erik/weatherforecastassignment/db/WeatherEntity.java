@@ -33,7 +33,10 @@ public class WeatherEntity {
     @ColumnInfo(name = "latitude")
     private double latitude;
 
-    public WeatherEntity(Date approvedTime, Date validTime, double tValue, double tccMeanValue, int wsymb2, double longitude, double latitude) {
+    @ColumnInfo(name = "timestamp")
+    private Date timestamp;
+
+    public WeatherEntity(Date approvedTime, Date validTime, double tValue, double tccMeanValue, int wsymb2, double longitude, double latitude, Date timestamp) {
         this.approvedTime = approvedTime;
         this.validTime = validTime;
         this.tValue = tValue;
@@ -41,6 +44,7 @@ public class WeatherEntity {
         this.wsymb2 = wsymb2;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.timestamp = timestamp;
     }
 
     public int getId() {
@@ -105,5 +109,13 @@ public class WeatherEntity {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 }

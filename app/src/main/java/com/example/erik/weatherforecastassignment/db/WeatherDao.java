@@ -6,6 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
+import java.util.Date;
 import java.util.List;
 
 @Dao
@@ -20,9 +21,9 @@ public interface WeatherDao {
     @Delete
     void delete(WeatherEntity weatherEntity);
 
-    @Query("SELECT MAX(approved_time) FROM WeatherEntity WHERE longitude = :longitude AND latitude = :latitude;")
-    long findMaxApprovedTimeByLongitudeAndLatitude(double longitude, double latitude);
+    @Query("SELECT MAX(timestamp) FROM WeatherEntity WHERE longitude = :longitude AND latitude = :latitude;")
+    Date findLatestEntryTimeByLongitudeAndLatitude(double longitude, double latitude);
 
-    @Query("SELECT * FROM WeatherEntity WHERE longitude = :longitude AND latitude = :latitude AND approved_time = (SELECT MAX(approved_time) FROM WeatherEntity WHERE longitude = :longitude AND latitude = :latitude);")
+    @Query("SELECT * FROM WeatherEntity WHERE longitude = :longitude AND latitude = :latitude AND timestamp = (SELECT MAX(timestamp) FROM WeatherEntity WHERE longitude = :longitude AND latitude = :latitude);")
     List<WeatherEntity> findLatestForecastsByLongitudeAndLatitude(double longitude, double latitude);
 }

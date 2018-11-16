@@ -41,7 +41,8 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
                     weatherForecast.getTccMeanValue(),
                     weatherForecast.getWsymb2(),
                     weatherForecast.getLongitude(),
-                    weatherForecast.getLatitude()
+                    weatherForecast.getLatitude(),
+                    new Date()
             );
             weatherEntities.add(weatherEntity);
         }
@@ -50,8 +51,8 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     }
 
     @Override
-    public long findMaxApprovedTimeByLongitudeAndLatitude(double longitude, double latitude) {
-        return weatherDatabase.weatherDao().findMaxApprovedTimeByLongitudeAndLatitude(longitude, latitude);
+    public Date findLatestEntryTimeByLongitudeAndLatitude(double longitude, double latitude) {
+        return weatherDatabase.weatherDao().findLatestEntryTimeByLongitudeAndLatitude(longitude, latitude);
     }
 
     @Override

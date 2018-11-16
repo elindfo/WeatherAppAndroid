@@ -49,7 +49,9 @@ public class Smhi implements WeatherProvider {
     public List<WeatherForecast> getWeatherForecastsByCoord(double lon, double lat){
 
 
-        String requestUrl = "https://maceo.sth.kth.se/api/category/pmp3g/version/2/geotype/point/lon/" + lon + "/lat/" + lat + "/";
+        //String requestUrl = "https://maceo.sth.kth.se/api/category/pmp3g/version/2/geotype/point/lon/" + lon + "/lat/" + lat + "/";
+        String requestUrl = String.format("https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/%.6f/lat/%.6f/data.json", lon, lat);
+
         WeatherData data = smhiRequest.getWeatherData(requestUrl);
 
         if(data == null || data.getTimeSeries().length < 1){
