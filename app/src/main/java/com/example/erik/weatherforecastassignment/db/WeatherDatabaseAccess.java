@@ -48,4 +48,31 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
         Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecasts: Adding " + weatherEntities.size() + " new WeatherEntities to database");
         weatherDatabase.weatherDao().insertAll(weatherEntities);
     }
+
+    @Override
+    public long findMaxApprovedTimeByLongitudeAndLatitude(double longitude, double latitude) {
+        return weatherDatabase.weatherDao().findMaxApprovedTimeByLongitudeAndLatitude(longitude, latitude);
+    }
+
+    @Override
+    public List<WeatherForecast> findLatestForecastsByLongitudeAndLatitude(double longitude, double latitude) {
+        List<WeatherEntity> weatherEntities = weatherDatabase.weatherDao().findLatestForecastsByLongitudeAndLatitude(longitude, latitude);
+        return convertFromWeatherEnityList(weatherEntities);
+    }
+
+    private List<WeatherForecast> convertFromWeatherEnityList(List<WeatherEntity> weatherEntities){
+        List<WeatherForecast> weatherForecasts = new ArrayList<>();
+        for(WeatherEntity we : weatherEntities){
+            WeatherForecast wf = new WeatherForecast();
+            wf.setApprovedTime(we.getApprovedTime());
+            wf.setValidTime(we.getValidTime());
+            wf.setTValue(we.getTValue());
+            wf.setTccMeanValue(we.getTccMeanValue());
+            wf.setWsymb2(we.getWsymb2());
+            wf.setLongitude(we.getLongitude());
+            wf.setLatitude(we.getLatitude());
+            weatherForecasts.add(wf);
+        }
+        return weatherForecasts;
+    }
 }

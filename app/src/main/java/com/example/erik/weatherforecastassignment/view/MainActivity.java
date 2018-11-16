@@ -71,12 +71,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
-            if(weatherForecasts != null){
+            if(weatherForecasts != null && weatherForecasts.size() > 0){
                 Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating recyclerView");
                 approvedTime.setText(String.format(getResources()
                         .getString(R.string.weather_approvedtime_text),
                         StringDateTool.getDisplayableStringFromDate(weatherForecasts.get(0).getApprovedTime())));
-                //String.format(getResources().getString(R.string.weather_approvedtime_text), StringDateTool.getDisplayableString(weatherForecasts.get(0).getApprovedTime()))
                 mAdapter = new RecyclerViewAdapter(getApplicationContext(), weatherForecasts);
                 mRecyclerView.setAdapter(mAdapter);
             }
