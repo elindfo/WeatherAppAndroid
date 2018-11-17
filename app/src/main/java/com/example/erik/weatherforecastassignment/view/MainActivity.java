@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText latitudeInputField;
     private Button updateButton;
 
+    private GetWeatherByCoordAsyncTask getWeatherByCoordAsyncTask;
+    private GetLastUpdatedWeatherAsyncTask getLastUpdatedWeatherAsyncTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, getResources().getString(R.string.weather_longitude_latitude_missing_string), Toast.LENGTH_SHORT).show();
             }
             else{
-                new GetWeatherByCoordAsyncTask().execute(longitude, latitude);
+                getWeatherByCoordAsyncTask = new GetWeatherByCoordAsyncTask();
+                getWeatherByCoordAsyncTask.execute(longitude, latitude);
             }
         });
     }
@@ -88,9 +92,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected List<WeatherForecast> doInBackground(String... strings) {
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: Fetching forecasts for lon " + strings[0] + ", lat " + strings[1]);
-            List<WeatherForecast> weatherForecasts = weatherModel
-                    .getWeatherForecastsByCoordinates(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
+            List<WeatherForecast> weatherForecasts = null;
+            if(!isCancelled()){
+                weatherForecasts = weatherModel
+                        .getWeatherForecastsByCoordinates(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
+            }
             return weatherForecasts;
+        }
+
+        @Override
+        protected void onCancelled(){
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onCancelled");
+            super.onCancelled();
         }
     }
 
@@ -121,9 +134,18 @@ public class MainActivity extends AppCompatActivity {
         protected List<WeatherForecast> doInBackground(NetworkStatus.Status... networkStatus) {
             status = networkStatus[0];
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: networkStatus: " + status + " - Loading previous data");
-            List<WeatherForecast> weatherForecasts = weatherModel
-                    .getLastUpdatedWeatherForecasts(status);
+            List<WeatherForecast> weatherForecasts = null;
+            if(!isCancelled()){
+                weatherForecasts = weatherModel
+                        .getLastUpdatedWeatherForecasts(status);
+            }
             return weatherForecasts;
+        }
+
+        @Override
+        protected void onCancelled() {
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onCancelled");
+            super.onCancelled();
         }
     }
 
@@ -131,12 +153,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         NetworkStatus.Status status = NetworkStatus.getStatus();
         Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onStart: " + status);
-        new GetLastUpdatedWeatherAsyncTask().execute(status);
+        getLastUpdatedWeatherAsyncTask = new GetLastUpdatedWeatherAsyncTask();
+        getLastUpdatedWeatherAsyncTask.execute(status);
         super.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy(){
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy");
+        if(getWeatherByCoordAsyncTask != null){
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy: getWeatherByCoordAsyncTask not null");
+            getWeatherByCoordAsyncTask.cancel(true);
+        }
+        if(getLastUpdatedWeatherAsyncTask != null){
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy: getLastUpdatedWeatherAsyncTask not null");
+            getLastUpdatedWeatherAsyncTask.cancel(true);
+        }
+        super.onDestroy();
     }
 }
