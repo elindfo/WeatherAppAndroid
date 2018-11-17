@@ -32,7 +32,13 @@ public class WeatherModel {
         //TODO Get from database if time < 1h, else get from SMHI api
         Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: Fetching forecasts for lon " + lon + ", lat " + lat);
         List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(lon, lat);
-        weatherDatabaseAccess.deleteAndInsertAll(weatherForecasts);
+        if(weatherForecasts != null && weatherForecasts.size() > 0){
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: Storing " + weatherForecasts.size() + " new forecasts.");
+            weatherDatabaseAccess.deleteAndInsertAll(weatherForecasts);
+        }
+        else{
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: No forecasts found for location");
+        }
         return weatherForecasts;
     }
 
@@ -72,6 +78,8 @@ public class WeatherModel {
                     .getSimpleName() + ": getLastUpdatedWeatherForecasts: Timelimit " + timeLimit / 60000 + " minutes exceeded, fetching data from API");
             WeatherForecast weatherForecast = weatherDatabaseAccess.getLast();
             List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(weatherForecast.getLongitude(), weatherForecast.getLatitude());
+            Log.d("WeatherForecastAssignment", this.getClass()
+                    .getSimpleName() + ": getLastUpdatedWeatherForecasts: Fetched " + weatherForecasts.size() + " new forecasts");
             weatherDatabaseAccess.deleteAndInsertAll(weatherForecasts);
             return weatherForecasts;
         }
