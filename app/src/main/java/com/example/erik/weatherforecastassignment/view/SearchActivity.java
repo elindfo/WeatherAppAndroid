@@ -48,6 +48,17 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick{
     }
 
     @Override
+    public void onClick(Place place) {
+        storeWeatherDataAsyncTask = new StoreWeatherDataAsyncTask();
+        storeWeatherDataAsyncTask.execute(place);
+    }
+
+    @Override
+    public void onLongClick(Place place) {
+        Toast.makeText(getContext(), String.format(getResources().getString(R.string.weather_add_to_favourite), place.getPlace()) , Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -70,16 +81,10 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick{
         Intent intent = getIntent();
         String place = intent.getStringExtra("place");
 
-        searchTerm.setText(place);
+        searchTerm.setText(R.string.weather_search_favourite_hint);
 
         getPlaceDataAsyncTask = new GetPlaceDataAsyncTask(this);
         getPlaceDataAsyncTask.execute(place);
-    }
-
-    @Override
-    public void onClick(Place place) {
-        storeWeatherDataAsyncTask = new StoreWeatherDataAsyncTask();
-        storeWeatherDataAsyncTask.execute(place);
     }
 
     private class GetPlaceDataAsyncTask extends AsyncTask<String, Void, List<Place>>{

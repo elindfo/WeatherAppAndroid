@@ -4,4 +4,5 @@ import com.example.erik.weatherforecastassignment.model.Place;
 
 public interface OnItemClick {
     void onClick(Place place);
+    void onLongClick(Place place);
 }

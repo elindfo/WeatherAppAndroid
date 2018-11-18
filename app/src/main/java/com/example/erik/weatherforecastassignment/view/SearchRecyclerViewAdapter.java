@@ -73,6 +73,17 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
                     callback.onClick(place);
                 }
             });
+
+            itemView.setOnLongClickListener((v) -> {
+                int pos = getAdapterPosition();
+                if(pos != RecyclerView.NO_POSITION){
+                    Place place = places.get(pos);
+                    callback.onLongClick(place);
+                }
+                return true;
+            });
+
+
         }
     }
 }
