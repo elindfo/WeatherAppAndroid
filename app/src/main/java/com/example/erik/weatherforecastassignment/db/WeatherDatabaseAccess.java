@@ -32,20 +32,8 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     }
 
     @Override
-    public void addWeatherForecasts(List<WeatherForecast> weatherForecasts) {
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": addWeatherForecasts: Adding " + weatherForecasts.size() + " new WeatherEntities to database");
-        weatherDatabase.weatherDao().insertAll(convertFromWeatherForecastList(weatherForecasts));
-    }
-
-    @Override
     public Date findLatestEntryTime() {
         return weatherDatabase.weatherDao().findLatestEntryTime();
-    }
-
-    @Override
-    public List<WeatherForecast> findLatestForecastsByLongitudeAndLatitude(double longitude, double latitude) {
-        List<WeatherEntity> weatherEntities = weatherDatabase.weatherDao().findLatestForecastsByLongitudeAndLatitude(longitude, latitude);
-        return convertFromWeatherEntityList(weatherEntities);
     }
 
     @Override
@@ -63,11 +51,6 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     @Override
     public WeatherForecast getLast() {
         return convertFromWeatherEntity(weatherDatabase.weatherDao().getEntry());
-    }
-
-    @Override
-    public Date findLatestEntryTimeByLongitudeAndLatitude(double lon, double lat) {
-        return weatherDatabase.weatherDao().findLatestEntryTimeLongitudeAndLatitude(lon, lat);
     }
 
     private WeatherForecast convertFromWeatherEntity(WeatherEntity weatherEntity){

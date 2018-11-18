@@ -1,7 +1,6 @@
 package com.example.erik.weatherforecastassignment.model;
 
 import java.util.Date;
-import java.util.List;
 
 public class WeatherForecast {
 

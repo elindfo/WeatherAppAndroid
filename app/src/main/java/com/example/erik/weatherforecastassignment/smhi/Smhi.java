@@ -30,8 +30,6 @@ import java.util.TimeZone;
 
 public class Smhi implements WeatherProvider {
 
-    private static final String PLACE_URL = "https://maceo.sth.kth.se/wpt-a/backend_solr/autocomplete/search/Sigfridstorp";
-
     private static Smhi smhi;
     private SmhiRequest smhiRequest;
 
