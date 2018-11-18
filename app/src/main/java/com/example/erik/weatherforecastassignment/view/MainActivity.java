@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
             if(weatherForecasts != null && weatherForecasts.size() > 0){
                 Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating recyclerView");
-                getSupportActionBar().setTitle(String.format("Weather in %s" ,weatherForecasts.get(0).getPlace()));
+                getSupportActionBar().setTitle(String.format("Weather Forecast - %s" ,weatherForecasts.get(0).getPlace()));
                 approvedTime.setText(String.format(getResources()
                                 .getString(R.string.weather_approvedtime_text),
                         StringDateTool.getDisplayableStringFromDate(weatherForecasts.get(0).getApprovedTime())));
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
             if(weatherForecasts != null && weatherForecasts.size() > 0){
                 Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating recyclerView");
-                getSupportActionBar().setTitle(String.format("Weather in %s" ,weatherForecasts.get(0).getPlace()));
+                getSupportActionBar().setTitle(String.format("Weather Forecast - %s" ,weatherForecasts.get(0).getPlace()));
                 approvedTime.setText(String.format(getResources()
                                 .getString(R.string.weather_approvedtime_text),
                         StringDateTool.getDisplayableStringFromDate(weatherForecasts.get(0).getApprovedTime())));
