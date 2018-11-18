@@ -28,20 +28,6 @@ public class WeatherModel {
         return weatherModel;
     }
 
-    public List<WeatherForecast> getWeatherForecastsByCoordinates(double lon, double lat){
-        //TODO Get from database if time < 1h, else get from SMHI api
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: Fetching forecasts for lon " + lon + ", lat " + lat);
-        List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(lon, lat);
-        if(weatherForecasts != null && weatherForecasts.size() > 0){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: Storing " + weatherForecasts.size() + " new forecasts.");
-            weatherDatabaseAccess.deleteAndInsertAll(weatherForecasts);
-        }
-        else{
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: No forecasts found for location");
-        }
-        return weatherForecasts;
-    }
-
     public List<WeatherForecast> getLastUpdatedWeatherForecasts(NetworkStatus.Status status) {
 
         Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: Fetching forecasts");
@@ -79,13 +65,20 @@ public class WeatherModel {
             WeatherForecast weatherForecast = weatherDatabaseAccess.getLast();
             List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(weatherForecast.getLongitude(), weatherForecast.getLatitude());
             Log.d("WeatherForecastAssignment", this.getClass()
-                    .getSimpleName() + ": getLastUpdatedWeatherForecasts: Fetched " + weatherForecasts.size() + " new forecasts");
+                    .getSimpleName() + ": getLastUpdatedWeatherForecasts: Fetched " + weatherForecasts.size() + " new forecasts for location " + weatherForecast.getPlace());
+            for(WeatherForecast wf : weatherForecasts){
+                wf.setPlace(weatherForecast.getPlace());
+            }
             weatherDatabaseAccess.deleteAndInsertAll(weatherForecasts);
             return weatherForecasts;
         }
         else{
             Log.d("WeatherForecastAssignment", this.getClass()
-                    .getSimpleName() + ": getWeatherForecastsByCoordinates: Timelimit " + timeLimit / 60000 + " minutes NOT exceeded, fetching data from database");
+                    .getSimpleName() + ": getLastUpdatedWeatherForecasts: Timelimit " + timeLimit / 60000 + " minutes NOT exceeded, fetching data from database");
+            List<WeatherForecast> weatherForecasts = weatherDatabaseAccess.getAll();
+            for(WeatherForecast wf : weatherForecasts){
+                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: Place fetched: " + wf.getPlace());
+            }
             return weatherDatabaseAccess.getAll();
         }
     }
