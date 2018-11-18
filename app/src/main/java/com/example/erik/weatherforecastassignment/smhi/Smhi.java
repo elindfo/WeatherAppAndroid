@@ -105,6 +105,7 @@ public class Smhi implements WeatherProvider {
 
         for(PlaceData placeData : data){
             Place p = new Place(
+                    Long.parseLong(placeData.getGeonameid()),
                     placeData.getPlace(),
                     placeData.getMunicipality(),
                     placeData.getCounty(),

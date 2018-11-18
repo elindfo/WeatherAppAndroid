@@ -8,4 +8,5 @@
     <string name="weather_approvedtime_text">Approved time: %1$s</string>
     <string name="weather_search_favourite_hint">Long press a place to add to favourites</string>
     <string name="weather_add_to_favourite">%1$s added to favourites</string>
+    <string name="weather_remove_from_favourite">%1$s removed from favourites</string>
 </resources>

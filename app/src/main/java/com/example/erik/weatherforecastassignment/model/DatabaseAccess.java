@@ -8,4 +8,7 @@ public interface DatabaseAccess {
     void deleteAndInsertAll(List<WeatherForecast> weatherForecasts);
     List<WeatherForecast> getAll();
     WeatherForecast getLast();
+    boolean isFavourite(Place place);
+    boolean addFavourite(Place place);
+    void removeFavourite(Place place);
 }

@@ -33,6 +33,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick{
 
     private GetPlaceDataAsyncTask getPlaceDataAsyncTask;
     private StoreWeatherDataAsyncTask storeWeatherDataAsyncTask;
+    private AddToFavouriteAsyncTask addToFavouriteAsyncTask;
 
     private WeatherModel weatherModel;
 
@@ -43,6 +44,9 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick{
         }
         if(storeWeatherDataAsyncTask != null){
             storeWeatherDataAsyncTask.cancel(true);
+        }
+        if(addToFavouriteAsyncTask != null){
+            addToFavouriteAsyncTask.cancel(true);
         }
         super.onDestroy();
     }
@@ -55,7 +59,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick{
 
     @Override
     public void onLongClick(Place place) {
-        Toast.makeText(getContext(), String.format(getResources().getString(R.string.weather_add_to_favourite), place.getPlace()) , Toast.LENGTH_SHORT).show();
+        addToFavouriteAsyncTask = new AddToFavouriteAsyncTask();
+        addToFavouriteAsyncTask.execute(place);
     }
 
     @Override
@@ -169,6 +174,66 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick{
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground");
             if(!isCancelled()){
                 weatherModel.setWeatherForecastsByPlace(places[0]);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled(){
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onCancelled");
+            super.onCancelled();
+        }
+    }
+
+    private class AddToFavouriteAsyncTask extends AsyncTask<Place, Void, Void>{
+
+        private ProgressDialog progressDialog;
+        private String placeName = "";
+        private boolean added = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(SearchActivity.this);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            if(progressDialog.isShowing()){
+                progressDialog.dismiss();
+            }
+            if(added){
+                Toast.makeText(getContext(), String.format(getResources().getString(R.string.weather_add_to_favourite), placeName) , Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(getContext(), "Already in favourites" , Toast.LENGTH_SHORT).show();
+            }
+            super.onPostExecute(v);
+        }
+
+        @Override
+        protected Void doInBackground(Place... places) {
+            placeName = places[0].getPlace();
+            if(!isCancelled()){
+                if(!weatherModel.isFavourite(places[0])){
+                    String s = places[0].getGeonameId() + " " + places[0].getCounty() + " " + places[0].getMunicipality();
+                    Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: is not favourite, adding " + s);
+                    if(weatherModel.addFavourite(places[0])){
+                        added = true;
+                        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: added");
+                    }
+                    else{
+                        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: unable to add");
+                    }
+                }
+                else{
+                    Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: already in favourites");
+                }
             }
             return null;
         }

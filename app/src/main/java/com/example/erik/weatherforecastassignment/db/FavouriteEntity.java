@@ -1,16 +1,32 @@
-package com.example.erik.weatherforecastassignment.model;
+package com.example.erik.weatherforecastassignment.db;
 
-public class Place {
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
-    private long geonameId;
+@Entity
+public class FavouriteEntity {
+
+    @PrimaryKey
+    private long id;
+
+    @ColumnInfo(name = "place")
     private String place;
+
+    @ColumnInfo(name = "municipality")
     private String municipality;
+
+    @ColumnInfo(name = "county")
     private String county;
+
+    @ColumnInfo(name = "longitude")
     private double longitude;
+
+    @ColumnInfo(name = "latitude")
     private double latitude;
 
-    public Place(long geonameId, String place, String municipality, String county, double longitude, double latitude) {
-        this.geonameId = geonameId;
+    public FavouriteEntity(long id, String place, String municipality, String county, double longitude, double latitude) {
+        this.id = id;
         this.place = place;
         this.municipality = municipality;
         this.county = county;
@@ -18,12 +34,12 @@ public class Place {
         this.latitude = latitude;
     }
 
-    public long getGeonameId() {
-        return geonameId;
+    public long getId() {
+        return id;
     }
 
-    public void setGeonameId(long geonameId) {
-        this.geonameId = geonameId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getPlace() {

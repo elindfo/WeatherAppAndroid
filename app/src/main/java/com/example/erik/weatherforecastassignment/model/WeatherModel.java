@@ -109,7 +109,6 @@ public class WeatherModel {
         List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(place.getLongitude(), place.getLatitude());
         if(weatherForecasts != null && weatherForecasts.size() > 0){
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByPlace: Storing " + weatherForecasts.size() + " new forecasts.");
-            //TODO ADD PLACE IN FORECAST
             for(WeatherForecast wf : weatherForecasts){
                 wf.setPlace(place.getPlace());
             }
@@ -122,6 +121,18 @@ public class WeatherModel {
 
     public List<Place> getPlaces(String place) {
         return weatherProvider.getPlaceData(place);
+    }
+
+    public boolean isFavourite(Place place){
+        return weatherDatabaseAccess.isFavourite(place);
+    }
+
+    public boolean addFavourite(Place place){
+        return weatherDatabaseAccess.addFavourite(place);
+    }
+
+    public void removeFavourite(Place place){
+        weatherDatabaseAccess.removeFavourite(place);
     }
 
 }

@@ -14,13 +14,7 @@ import java.util.List;
 public abstract class WeatherDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract void insert(WeatherEntity weatherEntity);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract void insertAll(List<WeatherEntity> weatherEntities);
-
-    @Delete
-    abstract void delete(WeatherEntity weatherEntity);
 
     @Query("DELETE FROM WeatherEntity")
     abstract void deleteAll();
@@ -37,12 +31,6 @@ public abstract class WeatherDao {
     @Query("SELECT * FROM WeatherEntity LIMIT 1")
     abstract WeatherEntity getEntry();
 
-    @Query("SELECT * FROM WeatherEntity WHERE longitude = :longitude AND latitude = :latitude AND timestamp = (SELECT MAX(timestamp) FROM WeatherEntity WHERE longitude = :longitude AND latitude = :latitude);")
-    abstract List<WeatherEntity> findLatestForecastsByLongitudeAndLatitude(double longitude, double latitude);
-
     @Query("SELECT * FROM WeatherEntity;")
     abstract List<WeatherEntity> findAll();
-
-    @Query("SELECT MAX(timestamp) FROM WeatherEntity WHERE longitude = :lon AND latitude = :lat;")
-    public abstract Date findLatestEntryTimeLongitudeAndLatitude(double lon, double lat);
 }

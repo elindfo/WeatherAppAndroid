@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.erik.weatherforecastassignment.model.ApplicationContextProvider;
 import com.example.erik.weatherforecastassignment.model.DatabaseAccess;
+import com.example.erik.weatherforecastassignment.model.Place;
 import com.example.erik.weatherforecastassignment.model.StringDateTool;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 
@@ -51,6 +52,33 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     @Override
     public WeatherForecast getLast() {
         return convertFromWeatherEntity(weatherDatabase.weatherDao().getEntry());
+    }
+
+    @Override
+    public boolean isFavourite(Place place) {
+        return weatherDatabase.favouriteDao().exists(place.getGeonameId()) > 0;
+    }
+
+    @Override
+    public boolean addFavourite(Place place) {
+        return weatherDatabase.favouriteDao().insert(convertFromPlace(place)) > 0;
+    }
+
+    @Override
+    public void removeFavourite(Place place) {
+        weatherDatabase.favouriteDao().delete(convertFromPlace(place));
+    }
+
+    private FavouriteEntity convertFromPlace(Place place){
+        FavouriteEntity favouriteEntity = new FavouriteEntity(
+                place.getGeonameId(),
+                place.getPlace(),
+                place.getMunicipality(),
+                place.getCounty(),
+                place.getLongitude(),
+                place.getLatitude()
+        );
+        return favouriteEntity;
     }
 
     private WeatherForecast convertFromWeatherEntity(WeatherEntity weatherEntity){
