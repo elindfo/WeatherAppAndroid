@@ -1,5 +1,7 @@
 package com.example.erik.weatherforecastassignment.view;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -72,6 +74,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class GetWeatherByPlaceAsyncTask extends AsyncTask<String, Void, List<WeatherForecast>>{
+
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
         @Override
         protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
             if(weatherForecasts != null && weatherForecasts.size() > 0){
@@ -85,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 Toast.makeText(MainActivity.this, getResources().getString(R.string.weather_location_not_found_string), Toast.LENGTH_SHORT).show();
+            }
+            if(progressDialog.isShowing()){
+                progressDialog.dismiss();
             }
             super.onPostExecute(weatherForecasts);
         }
@@ -110,6 +129,18 @@ public class MainActivity extends AppCompatActivity {
     private class GetLastUpdatedWeatherAsyncTask extends AsyncTask<NetworkStatus.Status, Void, List<WeatherForecast>>{
 
         private NetworkStatus.Status status;
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
 
         @Override
         protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
@@ -127,6 +158,9 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 Toast.makeText(MainActivity.this, "No weather history found", Toast.LENGTH_SHORT).show();
+            }
+            if(progressDialog.isShowing()){
+                progressDialog.dismiss();
             }
             super.onPostExecute(weatherForecasts);
         }
