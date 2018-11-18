@@ -2,6 +2,7 @@ package com.example.erik.weatherforecastassignment.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import java.util.List;
 
 import static com.example.erik.weatherforecastassignment.model.ApplicationContextProvider.getContext;
 
-public class SearchActivity extends AppCompatActivity  implements OnItemClick{
+public class SearchActivity extends AppCompatActivity implements OnItemClick{
 
     private TextView searchTerm;
     private RecyclerView searchRecyclerView;
@@ -36,9 +37,21 @@ public class SearchActivity extends AppCompatActivity  implements OnItemClick{
     private WeatherModel weatherModel;
 
     @Override
+    protected void onDestroy() {
+        if(getPlaceDataAsyncTask != null){
+            getPlaceDataAsyncTask.cancel(true);
+        }
+        if(storeWeatherDataAsyncTask != null){
+            storeWeatherDataAsyncTask.cancel(true);
+        }
+        super.onDestroy();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_portrait);
+
+        setContentView(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? R.layout.activity_search_portrait : R.layout.activity_search_landscape);
 
         weatherModel = WeatherModel.getInstance();
 

@@ -95,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, getResources().getString(R.string.weather_place_missing_string), Toast.LENGTH_SHORT).show();
             }
             else{
-                //getWeatherByPlaceAsyncTask = new GetWeatherByPlaceAsyncTask();
-                //getWeatherByPlaceAsyncTask.execute(place);
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 intent.putExtra("place", place);
                 startActivity(intent);
