@@ -89,4 +89,25 @@ public class WeatherModel {
             return weatherDatabaseAccess.getAll();
         }
     }
+
+    public List<WeatherForecast> getWeatherForecastsByPlace(String place) {
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByPlace: Fetching forecasts for " + place);
+        List<Place> places = weatherProvider.getPlaceData(place);
+        if(places != null && places.size() > 0){
+            List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(places.get(0).getLongitude(), places.get(0).getLatitude());
+            if(weatherForecasts != null && weatherForecasts.size() > 0){
+                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: Storing " + weatherForecasts.size() + " new forecasts.");
+                //TODO ADD PLACE IN FORECAST
+                for(WeatherForecast wf : weatherForecasts){
+                    wf.setPlace(places.get(0).getPlace());
+                }
+                weatherDatabaseAccess.deleteAndInsertAll(weatherForecasts);
+            }
+            else{
+                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: No forecasts found for location");
+            }
+            return weatherForecasts;
+        }
+        return new ArrayList<>();
+    }
 }

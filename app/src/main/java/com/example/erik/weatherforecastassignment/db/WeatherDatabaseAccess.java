@@ -72,6 +72,7 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
 
     private WeatherForecast convertFromWeatherEntity(WeatherEntity weatherEntity){
         WeatherForecast wf = new WeatherForecast();
+        wf.setPlace(weatherEntity.getPlace());
         wf.setApprovedTime(StringDateTool.getDateFromISO8601String(weatherEntity.getApprovedTime()));
         wf.setValidTime(StringDateTool.getDateFromISO8601String(weatherEntity.getValidTime()));
         wf.setTValue(weatherEntity.getTValue());
@@ -87,6 +88,7 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
         Date date = new Date();
         for(WeatherForecast weatherForecast : weatherForecasts){
             WeatherEntity weatherEntity = new WeatherEntity(
+                    weatherForecast.getPlace(),
                     StringDateTool.getISO8601StringFromDate(weatherForecast.getApprovedTime()),
                     StringDateTool.getISO8601StringFromDate(weatherForecast.getValidTime()),
                     weatherForecast.getTValue(),

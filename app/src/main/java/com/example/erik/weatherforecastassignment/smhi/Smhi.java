@@ -2,6 +2,7 @@ package com.example.erik.weatherforecastassignment.smhi;
 
 import android.util.Log;
 
+import com.example.erik.weatherforecastassignment.model.Place;
 import com.example.erik.weatherforecastassignment.model.StringDateTool;
 import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherProvider;
@@ -22,6 +23,7 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -29,7 +31,6 @@ import java.util.TimeZone;
 public class Smhi implements WeatherProvider {
 
     private static final String PLACE_URL = "https://maceo.sth.kth.se/wpt-a/backend_solr/autocomplete/search/Sigfridstorp";
-    private static final String WEATHER_URL = "https://maceo.sth.kth.se/api/category/pmp3g/version/2/geotype/point/lon/14.333/lat/60.383/";
 
     private static Smhi smhi;
     private SmhiRequest smhiRequest;
@@ -48,8 +49,6 @@ public class Smhi implements WeatherProvider {
     @Override
     public List<WeatherForecast> getWeatherForecastsByCoord(double lon, double lat){
 
-
-        //String requestUrl = "https://maceo.sth.kth.se/api/category/pmp3g/version/2/geotype/point/lon/" + lon + "/lat/" + lat + "/";
         String requestUrl = String.format("https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/%.6f/lat/%.6f/data.json", lon, lat);
 
         WeatherData data = smhiRequest.getWeatherData(requestUrl);
@@ -88,6 +87,30 @@ public class Smhi implements WeatherProvider {
         return weatherForecasts;
     }
 
+    @Override
+    public List<Place> getPlaceData(String place) {
+
+        String requestUrl = String.format("https://www.smhi.se/wpt-a/backend_solr/autocomplete/search/%s", place);
+
+        List<PlaceData> data = Arrays.asList(smhiRequest.getPlaceData(requestUrl));
+
+        if(data == null){
+            return null;
+        }
+
+        List<Place> places = new ArrayList<>();
+
+        for(PlaceData placeData : data){
+            Place p = new Place(
+                    placeData.getPlace(),
+                    placeData.getLon(),
+                    placeData.getLat()
+            );
+            places.add(p);
+        }
+        return places;
+    }
+
     private class SmhiRequest{
 
         private Gson gson;
@@ -110,7 +133,7 @@ public class Smhi implements WeatherProvider {
             return null;
         }
 
-        public PlaceData getPlaceData(String requestUrl){
+        public PlaceData[] getPlaceData(String requestUrl){
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherData: Fetching place data from URL: " + requestUrl);
 
             URL url;
@@ -120,7 +143,7 @@ public class Smhi implements WeatherProvider {
                 urlConnection = url.openConnection();
                 JsonParser jsonParser = new JsonParser();
                 JsonElement jsonData = jsonParser.parse(new InputStreamReader((InputStream)urlConnection.getContent()));
-                return gson.fromJson(jsonData.toString(), PlaceData.class);
+                return gson.fromJson(jsonData.toString(), PlaceData[].class);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {

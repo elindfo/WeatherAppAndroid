@@ -12,6 +12,9 @@ public class WeatherEntity {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
+    @ColumnInfo(name = "place")
+    private String place;
+
     @ColumnInfo(name = "approved_time")
     private String approvedTime;
 
@@ -36,7 +39,8 @@ public class WeatherEntity {
     @ColumnInfo(name = "timestamp")
     private Date timestamp;
 
-    public WeatherEntity(String approvedTime, String validTime, double tValue, double tccMeanValue, int wsymb2, double longitude, double latitude, Date timestamp) {
+    public WeatherEntity(String place, String approvedTime, String validTime, double tValue, double tccMeanValue, int wsymb2, double longitude, double latitude, Date timestamp) {
+        this.place = place;
         this.approvedTime = approvedTime;
         this.validTime = validTime;
         this.tValue = tValue;
@@ -53,6 +57,14 @@ public class WeatherEntity {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
     }
 
     public String getApprovedTime() {

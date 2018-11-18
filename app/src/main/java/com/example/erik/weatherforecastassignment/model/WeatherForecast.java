@@ -12,6 +12,7 @@ public class WeatherForecast {
     private int wsymb2;
     private double longitude;
     private double latitude;
+    private String place;
 
     public WeatherForecast() {
     }
@@ -70,5 +71,13 @@ public class WeatherForecast {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
     }
 }

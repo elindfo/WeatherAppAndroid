@@ -32,11 +32,10 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
-    private EditText longitudeInputField;
-    private EditText latitudeInputField;
+    private EditText placeInputField;
     private Button updateButton;
 
-    private GetWeatherByCoordAsyncTask getWeatherByCoordAsyncTask;
+    private GetWeatherByPlaceAsyncTask getWeatherByPlaceAsyncTask;
     private GetLastUpdatedWeatherAsyncTask getLastUpdatedWeatherAsyncTask;
 
     @Override
@@ -53,32 +52,31 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
                 DividerItemDecoration.VERTICAL));
         mAdapter = new RecyclerViewAdapter(getApplicationContext(), new ArrayList<>());
-        longitudeInputField = findViewById(R.id.weather_longitude);
-        latitudeInputField = findViewById(R.id.weather_latitude);
+        placeInputField = findViewById(R.id.weather_place);
         updateButton = findViewById(R.id.weather_update_button);
 
         updateButton.setOnClickListener((view) -> {
             //TODO Make async
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": updateButton: CLICKED");
-            String longitude = longitudeInputField.getText().toString();
-            String latitude = latitudeInputField.getText().toString();
-            if(longitude.matches("") || latitude.matches("")){
-                Toast.makeText(this, getResources().getString(R.string.weather_longitude_latitude_missing_string), Toast.LENGTH_SHORT).show();
+            String place = placeInputField.getText().toString();
+            if(place.matches("")){
+                Toast.makeText(this, getResources().getString(R.string.weather_place_missing_string), Toast.LENGTH_SHORT).show();
             }
             else{
-                getWeatherByCoordAsyncTask = new GetWeatherByCoordAsyncTask();
-                getWeatherByCoordAsyncTask.execute(longitude, latitude);
+                getWeatherByPlaceAsyncTask = new GetWeatherByPlaceAsyncTask();
+                getWeatherByPlaceAsyncTask.execute(place);
             }
         });
     }
 
-    private class GetWeatherByCoordAsyncTask extends AsyncTask<String, Void, List<WeatherForecast>>{
+    private class GetWeatherByPlaceAsyncTask extends AsyncTask<String, Void, List<WeatherForecast>>{
         @Override
         protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
             if(weatherForecasts != null && weatherForecasts.size() > 0){
                 Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating recyclerView");
+                getSupportActionBar().setTitle(String.format("Weather in %s" ,weatherForecasts.get(0).getPlace()));
                 approvedTime.setText(String.format(getResources()
-                        .getString(R.string.weather_approvedtime_text),
+                                .getString(R.string.weather_approvedtime_text),
                         StringDateTool.getDisplayableStringFromDate(weatherForecasts.get(0).getApprovedTime())));
                 mAdapter = new RecyclerViewAdapter(getApplicationContext(), weatherForecasts);
                 mRecyclerView.setAdapter(mAdapter);
@@ -91,11 +89,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected List<WeatherForecast> doInBackground(String... strings) {
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: Fetching forecasts for lon " + strings[0] + ", lat " + strings[1]);
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: Fetching forecasts for " + strings[0]);
             List<WeatherForecast> weatherForecasts = null;
             if(!isCancelled()){
                 weatherForecasts = weatherModel
-                        .getWeatherForecastsByCoordinates(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
+                        .getWeatherForecastsByPlace(strings[0]);
             }
             return weatherForecasts;
         }
@@ -115,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
             if(weatherForecasts != null && weatherForecasts.size() > 0){
                 Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating recyclerView");
+                getSupportActionBar().setTitle(String.format("Weather in %s" ,weatherForecasts.get(0).getPlace()));
                 approvedTime.setText(String.format(getResources()
                                 .getString(R.string.weather_approvedtime_text),
                         StringDateTool.getDisplayableStringFromDate(weatherForecasts.get(0).getApprovedTime())));
@@ -166,9 +165,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy");
-        if(getWeatherByCoordAsyncTask != null){
+        if(getWeatherByPlaceAsyncTask != null){
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy: getWeatherByCoordAsyncTask not null");
-            getWeatherByCoordAsyncTask.cancel(true);
+            getWeatherByPlaceAsyncTask.cancel(true);
         }
         if(getLastUpdatedWeatherAsyncTask != null){
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy: getLastUpdatedWeatherAsyncTask not null");
