@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:id="@+id/weather_search_recycler_view_layout">
+
+    <TextView
+        android:id="@+id/weather_search_recycler_view_item_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sigfridstorp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:textColor="#000"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/weather_search_recycler_view_item_county"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dalarnas Län"
+        android:layout_alignBaseline="@+id/weather_search_recycler_view_item_place"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:layout_alignParentRight="true"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/weather_search_recycler_view_item_municipality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vansbro"
+        android:layout_below="@+id/weather_search_recycler_view_item_place"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="15dp"/>
+</RelativeLayout>

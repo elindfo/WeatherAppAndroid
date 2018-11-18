@@ -1,6 +1,7 @@
 package com.example.erik.weatherforecastassignment.view;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,34 @@ public class MainActivity extends AppCompatActivity {
     private GetLastUpdatedWeatherAsyncTask getLastUpdatedWeatherAsyncTask;
 
     @Override
+    protected void onStart() {
+        NetworkStatus.Status status = NetworkStatus.getStatus();
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onStart: " + status);
+        getLastUpdatedWeatherAsyncTask = new GetLastUpdatedWeatherAsyncTask();
+        getLastUpdatedWeatherAsyncTask.execute(status);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy(){
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy");
+        if(getWeatherByPlaceAsyncTask != null){
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy: getWeatherByCoordAsyncTask not null");
+            getWeatherByPlaceAsyncTask.cancel(true);
+        }
+        if(getLastUpdatedWeatherAsyncTask != null){
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy: getLastUpdatedWeatherAsyncTask not null");
+            getLastUpdatedWeatherAsyncTask.cancel(true);
+        }
+        super.onDestroy();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -54,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
                 DividerItemDecoration.VERTICAL));
-        mAdapter = new RecyclerViewAdapter(getApplicationContext(), new ArrayList<>());
+        mAdapter = new MainRecyclerViewAdapter(getApplicationContext(), new ArrayList<>());
         placeInputField = findViewById(R.id.weather_place);
         updateButton = findViewById(R.id.weather_update_button);
 
@@ -66,8 +95,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, getResources().getString(R.string.weather_place_missing_string), Toast.LENGTH_SHORT).show();
             }
             else{
-                getWeatherByPlaceAsyncTask = new GetWeatherByPlaceAsyncTask();
-                getWeatherByPlaceAsyncTask.execute(place);
+                //getWeatherByPlaceAsyncTask = new GetWeatherByPlaceAsyncTask();
+                //getWeatherByPlaceAsyncTask.execute(place);
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                intent.putExtra("place", place);
+                startActivity(intent);
             }
         });
     }
@@ -95,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 approvedTime.setText(String.format(getResources()
                                 .getString(R.string.weather_approvedtime_text),
                         StringDateTool.getDisplayableStringFromDate(weatherForecasts.get(0).getApprovedTime())));
-                mAdapter = new RecyclerViewAdapter(getApplicationContext(), weatherForecasts);
+                mAdapter = new MainRecyclerViewAdapter(getApplicationContext(), weatherForecasts);
                 mRecyclerView.setAdapter(mAdapter);
             }
             else{
@@ -149,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                 approvedTime.setText(String.format(getResources()
                                 .getString(R.string.weather_approvedtime_text),
                         StringDateTool.getDisplayableStringFromDate(weatherForecasts.get(0).getApprovedTime())));
-                mAdapter = new RecyclerViewAdapter(getApplicationContext(), weatherForecasts);
+                mAdapter = new MainRecyclerViewAdapter(getApplicationContext(), weatherForecasts);
                 mRecyclerView.setAdapter(mAdapter);
                 if(status == NetworkStatus.Status.NO_CONNECTION){
                     Toast.makeText(MainActivity.this, "No internet connection. Data may be outdated.", Toast.LENGTH_SHORT).show();
@@ -181,33 +213,5 @@ public class MainActivity extends AppCompatActivity {
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onCancelled");
             super.onCancelled();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        NetworkStatus.Status status = NetworkStatus.getStatus();
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onStart: " + status);
-        getLastUpdatedWeatherAsyncTask = new GetLastUpdatedWeatherAsyncTask();
-        getLastUpdatedWeatherAsyncTask.execute(status);
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy(){
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy");
-        if(getWeatherByPlaceAsyncTask != null){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy: getWeatherByCoordAsyncTask not null");
-            getWeatherByPlaceAsyncTask.cancel(true);
-        }
-        if(getLastUpdatedWeatherAsyncTask != null){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy: getLastUpdatedWeatherAsyncTask not null");
-            getLastUpdatedWeatherAsyncTask.cancel(true);
-        }
-        super.onDestroy();
     }
 }

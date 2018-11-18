@@ -19,12 +19,12 @@ import java.util.List;
 
 //https://www.youtube.com/watch?v=Vyqz_-sJGFk
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
+public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerViewAdapter.ViewHolder>{
 
     private List<WeatherForecast> weatherForecasts;
     private Context context;
 
-    public RecyclerViewAdapter(Context context, List<WeatherForecast> weatherForecasts) {
+    public MainRecyclerViewAdapter(Context context, List<WeatherForecast> weatherForecasts) {
         this.context = context;
         this.weatherForecasts = weatherForecasts;
     }
@@ -32,14 +32,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_listitem, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_main_listitem, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Log.d("RecyclerViewAdapter", "onBindViewHolder: called");
+        Log.d("MainRecyclerViewAdapter", "onBindViewHolder: called");
         viewHolder.temperature.setText(String.valueOf(weatherForecasts.get(i).getTValue()));
         viewHolder.time.setText(StringDateTool.getDisplayableStringFromDate(weatherForecasts.get(i).getValidTime()));
 

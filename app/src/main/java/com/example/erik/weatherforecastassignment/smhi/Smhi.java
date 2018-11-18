@@ -48,12 +48,15 @@ public class Smhi implements WeatherProvider {
     public List<WeatherForecast> getWeatherForecastsByCoord(double lon, double lat){
 
         String requestUrl = String.format("https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/%.6f/lat/%.6f/data.json", lon, lat);
-
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoord: Getting forecasts for " + lon + ", " + lat);
         WeatherData data = smhiRequest.getWeatherData(requestUrl);
 
         if(data == null || data.getTimeSeries().length < 1){
+            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoord: No forecasts found");
             return null;
         }
+
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoord: Found forecasts");
 
         List<WeatherForecast> weatherForecasts = new ArrayList<>();
 
@@ -92,6 +95,8 @@ public class Smhi implements WeatherProvider {
 
         List<PlaceData> data = Arrays.asList(smhiRequest.getPlaceData(requestUrl));
 
+        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getPlaceData: Found " + data.size() + " places.");
+
         if(data == null){
             return null;
         }
@@ -101,6 +106,8 @@ public class Smhi implements WeatherProvider {
         for(PlaceData placeData : data){
             Place p = new Place(
                     placeData.getPlace(),
+                    placeData.getMunicipality(),
+                    placeData.getCounty(),
                     placeData.getLon(),
                     placeData.getLat()
             );
@@ -127,7 +134,9 @@ public class Smhi implements WeatherProvider {
                 JsonElement jsonData = jsonParser.parse(new InputStreamReader((InputStream)urlConnection.getContent()));
                 return gson.fromJson(jsonData.toString(), WeatherData.class);
             }
-            catch (Exception e){}
+            catch (Exception e){
+                e.printStackTrace();
+            }
             return null;
         }
 
