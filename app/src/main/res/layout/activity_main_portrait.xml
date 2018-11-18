@@ -10,7 +10,9 @@
         android:id="@+id/weather_approvedtime"
         android:layout_width="330dp"
         android:layout_height="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:text="@string/weather_approvedtime_text"
         android:textAlignment="center"
@@ -23,40 +25,35 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/weather_recycler_view"
         android:layout_width="347dp"
-        android:layout_height="405dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_height="469dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/weather_place"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.523"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="57dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/weather_update_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_width="118dp"
+        android:layout_height="52dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/weather_update_button_string"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weather_recycler_view" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
         android:id="@+id/weather_place"
         android:layout_width="226dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="16dp"
         android:ems="10"
         android:hint="@string/weather_place_string"
         android:inputType="textPersonName"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        app:layout_constraintEnd_toStartOf="@+id/weather_update_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weather_recycler_view" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/weather_update_button"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
