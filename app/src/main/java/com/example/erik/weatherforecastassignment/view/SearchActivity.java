@@ -25,14 +25,14 @@ import java.util.List;
 
 import static com.example.erik.weatherforecastassignment.model.ApplicationContextProvider.getContext;
 
-public class SearchActivity extends AppCompatActivity implements OnItemClick{
+public class SearchActivity extends AppCompatActivity implements OnItemClick, AsyncTaskCompleteListener{
 
     private TextView searchTerm;
     private RecyclerView searchRecyclerView;
     private RecyclerView.Adapter searchRecyclerViewAdapter;
 
     private GetPlaceDataAsyncTask getPlaceDataAsyncTask;
-    private StoreWeatherDataAsyncTask storeWeatherDataAsyncTask;
+    private UpdateWeatherDataAsyncTask updateWeatherDataAsyncTask;
     private AddToFavouriteAsyncTask addToFavouriteAsyncTask;
 
     private WeatherModel weatherModel;
@@ -42,8 +42,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick{
         if(getPlaceDataAsyncTask != null){
             getPlaceDataAsyncTask.cancel(true);
         }
-        if(storeWeatherDataAsyncTask != null){
-            storeWeatherDataAsyncTask.cancel(true);
+        if(updateWeatherDataAsyncTask != null){
+            updateWeatherDataAsyncTask.cancel(true);
         }
         if(addToFavouriteAsyncTask != null){
             addToFavouriteAsyncTask.cancel(true);
@@ -53,14 +53,19 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick{
 
     @Override
     public void onClick(Place place) {
-        storeWeatherDataAsyncTask = new StoreWeatherDataAsyncTask();
-        storeWeatherDataAsyncTask.execute(place);
+        updateWeatherDataAsyncTask = new UpdateWeatherDataAsyncTask(this, new ProgressDialog(this));
+        updateWeatherDataAsyncTask.execute(place);
     }
 
     @Override
     public void onLongClick(Place place) {
         addToFavouriteAsyncTask = new AddToFavouriteAsyncTask();
         addToFavouriteAsyncTask.execute(place);
+    }
+
+    @Override
+    public void onTaskComplete(Object result) {
+        finish();
     }
 
     @Override

@@ -6,9 +6,10 @@ import java.util.List;
 public interface DatabaseAccess {
     Date findLatestEntryTime();
     void deleteAndInsertAll(List<WeatherForecast> weatherForecasts);
-    List<WeatherForecast> getAll();
+    List<WeatherForecast> getAllForecasts();
     WeatherForecast getLast();
     boolean isFavourite(Place place);
     boolean addFavourite(Place place);
     void removeFavourite(Place place);
+    List<Place> getFavourites();
 }

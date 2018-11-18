@@ -55,7 +55,7 @@ public class WeatherModel {
                 break;
             }
             case NO_CONNECTION:{ //Unable to fetch, if no stored data, return empty array
-                return weatherDatabaseAccess.getAll();
+                return weatherDatabaseAccess.getAllForecasts();
             }
         }
         Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: Time difference: " + (currentTimeInMillis - latestEntryTimeInMillis));
@@ -75,11 +75,11 @@ public class WeatherModel {
         else{
             Log.d("WeatherForecastAssignment", this.getClass()
                     .getSimpleName() + ": getLastUpdatedWeatherForecasts: Timelimit " + timeLimit / 60000 + " minutes NOT exceeded, fetching data from database");
-            List<WeatherForecast> weatherForecasts = weatherDatabaseAccess.getAll();
+            List<WeatherForecast> weatherForecasts = weatherDatabaseAccess.getAllForecasts();
             for(WeatherForecast wf : weatherForecasts){
                 Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: Place fetched: " + wf.getPlace());
             }
-            return weatherDatabaseAccess.getAll();
+            return weatherDatabaseAccess.getAllForecasts();
         }
     }
 
@@ -135,4 +135,7 @@ public class WeatherModel {
         weatherDatabaseAccess.removeFavourite(place);
     }
 
+    public List<Place> getFavourites() {
+        return weatherDatabaseAccess.getFavourites();
+    }
 }

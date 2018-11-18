@@ -9,4 +9,5 @@
     <string name="weather_search_favourite_hint">Long press a place to add to favourites</string>
     <string name="weather_add_to_favourite">%1$s added to favourites</string>
     <string name="weather_remove_from_favourite">%1$s removed from favourites</string>
+    <string name="weather_favourite_places_item_text">Favourites</string>
 </resources>

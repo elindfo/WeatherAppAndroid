@@ -44,7 +44,7 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     }
 
     @Override
-    public List<WeatherForecast> getAll() {
+    public List<WeatherForecast> getAllForecasts() {
         List<WeatherEntity> weatherEntities = weatherDatabase.weatherDao().findAll();
         return convertFromWeatherEntityList(weatherEntities);
     }
@@ -67,6 +67,31 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     @Override
     public void removeFavourite(Place place) {
         weatherDatabase.favouriteDao().delete(convertFromPlace(place));
+    }
+
+    @Override
+    public List<Place> getFavourites() {
+        return convertFromFavouriteEntityList(weatherDatabase.favouriteDao().findAll());
+    }
+
+    private List<Place> convertFromFavouriteEntityList(List<FavouriteEntity> favouriteEntities){
+        List<Place> places = new ArrayList<>();
+        for(FavouriteEntity favouriteEntity : favouriteEntities){
+            places.add(convertFromFavouriteEntity(favouriteEntity));
+        }
+        return places;
+    }
+
+    private Place convertFromFavouriteEntity(FavouriteEntity favouriteEntity){
+        Place place = new Place(
+                favouriteEntity.getId(),
+                favouriteEntity.getPlace(),
+                favouriteEntity.getMunicipality(),
+                favouriteEntity.getCounty(),
+                favouriteEntity.getLongitude(),
+                favouriteEntity.getLatitude()
+        );
+        return place;
     }
 
     private FavouriteEntity convertFromPlace(Place place){
