@@ -21,6 +21,12 @@ import java.util.List;
 
 import static com.example.erik.weatherforecastassignment.model.ApplicationContextProvider.getContext;
 
+/**
+ * The SearchActivity activity displays the search results from a location search, fetches data and
+ * updates the database on RecyclerView item click and adds a location to favorites on long item click
+ * It implements two interfaces: OnItemClick and AsyncTaskCompleteListener,
+ * both used for AsyncTask callbacks.
+ */
 public class SearchActivity extends AppCompatActivity implements OnItemClick, AsyncTaskCompleteListener{
 
     private RecyclerView searchRecyclerView;
@@ -30,6 +36,9 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
     private UpdateWeatherDataAsyncTask updateWeatherDataAsyncTask;
     private AddToFavoriteAsyncTask addToFavoriteAsyncTask;
 
+    /**
+     * Cancels any running AsyncTask when the activity is destroyed
+     */
     @Override
     protected void onDestroy() {
         if(getPlaceDataAsyncTask != null){
@@ -47,6 +56,12 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
         super.onDestroy();
     }
 
+
+    /**
+     * Callback method that takes the Place data received from the clicked RecyclerView item
+     * and starts a new AsyncTask to get weather data from the corresponding Place
+     * @param place The Place clicked in the list
+     */
     @Override
     public void onClick(Place place) {
         Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onClick: " + place.getPlace());
@@ -54,6 +69,11 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
         updateWeatherDataAsyncTask.execute(place);
     }
 
+    /**
+     * Callback method that takes the Place data received from the long clicked RecyclerView item
+     * and starts a new AsyncTask to add the Place to the favorites list
+     * @param place The place clicked in the list
+     */
     @Override
     public void onLongClick(Place place) {
         Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onLongClick: " + place.getPlace());
@@ -61,6 +81,11 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
         addToFavoriteAsyncTask.execute(place);
     }
 
+    /**
+     * Callback method that closes the activity when the corresponding AsyncTask has finished
+     * fetching and storing new weather data
+     * @param result Result from AsyncTask (not used)
+     */
     @Override
     public void onTaskComplete(Object result) {
         Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onTaskComplete: close activity");
@@ -91,6 +116,9 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
         getPlaceDataAsyncTask.execute(place);
     }
 
+    /**
+     * This private AsyncTask fetches the SMHI Place data that is used to populate the RecyclerView
+     */
     private class GetPlaceDataAsyncTask extends AsyncTask<String, Void, List<Place>>{
 
         private ProgressDialog progressDialog;
@@ -144,6 +172,9 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
         }
     }
 
+    /**
+     * This private AsyncTask adds a Place object to the favorites list
+     */
     private class AddToFavoriteAsyncTask extends AsyncTask<Place, Void, Void>{
 
         private String placeName = "";

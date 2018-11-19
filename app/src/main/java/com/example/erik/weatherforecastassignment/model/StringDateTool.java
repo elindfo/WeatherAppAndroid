@@ -14,7 +14,6 @@ public class StringDateTool {
         df.setTimeZone(tz);
         try {
             return df.parse(s);
-
         } catch (ParseException e) {}
         return null;
     }

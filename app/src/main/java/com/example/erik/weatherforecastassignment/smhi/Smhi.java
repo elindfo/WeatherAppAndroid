@@ -56,7 +56,7 @@ public class Smhi implements WeatherProvider {
 
         if(data == null || data.getTimeSeries().length < 1){
             Log.d(Smhi.TAG, this.getClass().getSimpleName() + ": getWeatherForecastsByCoord: no forecasts found");
-            return null;
+            return new ArrayList<>();
         }
 
         Log.d(Smhi.TAG, this.getClass().getSimpleName() + ": getWeatherForecastsByCoord: found forecasts");
@@ -101,7 +101,7 @@ public class Smhi implements WeatherProvider {
         Log.d(Smhi.TAG, this.getClass().getSimpleName() + ": getPlaceData: Found " + data.size() + " places.");
 
         if(data == null){
-            return null;
+            return new ArrayList<>();
         }
 
         List<Place> places = new ArrayList<>();
@@ -138,9 +138,8 @@ public class Smhi implements WeatherProvider {
                 JsonParser jsonParser = new JsonParser();
                 JsonElement jsonData = jsonParser.parse(new InputStreamReader((InputStream)urlConnection.getContent()));
                 return gson.fromJson(jsonData.toString(), WeatherData.class);
-            }
-            catch (Exception e){
-                e.printStackTrace();
+            } catch (MalformedURLException e) {
+            } catch (IOException e) {
             }
             return null;
         }
@@ -157,9 +156,7 @@ public class Smhi implements WeatherProvider {
                 JsonElement jsonData = jsonParser.parse(new InputStreamReader((InputStream)urlConnection.getContent()));
                 return gson.fromJson(jsonData.toString(), PlaceData[].class);
             } catch (MalformedURLException e) {
-                e.printStackTrace();
             } catch (IOException e) {
-                e.printStackTrace();
             }
             return null;
         }

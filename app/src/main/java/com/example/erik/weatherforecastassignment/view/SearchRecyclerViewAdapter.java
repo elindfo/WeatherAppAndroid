@@ -20,6 +20,12 @@ import java.util.List;
 
 //https://www.youtube.com/watch?v=Vyqz_-sJGFk
 
+/**
+ * Adapter class handling the SearchActivity recycler view items. It displays
+ * place, municipality and county name data. It has two listeners
+ * handling onClick and onLongClick, where both returns the Place object
+ * corresponding to that specific item via callback.
+ */
 public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecyclerViewAdapter.ViewHolder>{
 
     private List<Place> places;

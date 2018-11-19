@@ -20,6 +20,12 @@ import java.util.List;
 
 import static com.example.erik.weatherforecastassignment.model.ApplicationContextProvider.getContext;
 
+/**
+ * The FavoritesActivity activity displays the current favorites list, fetches data and
+ * updates the database on RecyclerView item click and removes a location from favorites on long item click
+ * It implements two interfaces: OnItemClick and AsyncTaskCompleteListener,
+ * both used for AsyncTask callbacks.
+ */
 public class FavoritesActivity extends AppCompatActivity implements OnItemClick, AsyncTaskCompleteListener{
 
     private RecyclerView favoritesRecyclerView;
@@ -29,6 +35,9 @@ public class FavoritesActivity extends AppCompatActivity implements OnItemClick,
     private RemoveFavoriteAsyncTask removeFavoriteAsyncTask;
     private UpdateWeatherDataAsyncTask updateWeatherDataAsyncTask;
 
+    /**
+     * Cancels any running AsyncTask when the activity is destroyed
+     */
     @Override
     protected void onDestroy() {
         if(getFavoritesAsyncTask != null){
@@ -46,6 +55,11 @@ public class FavoritesActivity extends AppCompatActivity implements OnItemClick,
         super.onDestroy();
     }
 
+    /**
+     * Callback method that takes the Place data received from the clicked RecyclerView item
+     * and starts a new AsyncTask to get weather data from the corresponding Place
+     * @param place The Place clicked in the list
+     */
     @Override
     public void onClick(Place place) {
         Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onClick: " + place.getPlace());
@@ -53,17 +67,27 @@ public class FavoritesActivity extends AppCompatActivity implements OnItemClick,
         updateWeatherDataAsyncTask.execute(place);
     }
 
-    @Override
-    public void onTaskComplete(Object result) {
-        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onTaskComplete");
-        finish();
-    }
-
+    /**
+     * Callback method that takes the Place data received from the long clicked RecyclerView item
+     * and starts a new AsyncTask to remove the Place from the favorites list
+     * @param place The place clicked in the list
+     */
     @Override
     public void onLongClick(Place place){
         Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onLongClick: " + place.getPlace());
         removeFavoriteAsyncTask = new RemoveFavoriteAsyncTask();
         removeFavoriteAsyncTask.execute(place);
+    }
+
+    /**
+     * Callback method that closes the activity when the corresponding AsyncTask has finished
+     * fetching and storing new weather data
+     * @param result Result from AsyncTask (not used)
+     */
+    @Override
+    public void onTaskComplete(Object result) {
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onTaskComplete");
+        finish();
     }
 
     @Override
@@ -86,6 +110,10 @@ public class FavoritesActivity extends AppCompatActivity implements OnItemClick,
         getFavoritesAsyncTask.execute();
     }
 
+    /**
+     * This private AsyncTask fetches the favorites list from the database and updates the
+     * RecyclerView to show found favorites.
+     */
     private class GetFavoritesAsyncTask extends AsyncTask<Void, Void, List<Place>> {
 
         private OnItemClick callback;
@@ -125,6 +153,10 @@ public class FavoritesActivity extends AppCompatActivity implements OnItemClick,
         }
     }
 
+    /**
+     * This private AsyncTask removes the chosen Place from the favorites list and updates
+     * the RecyclerView with the new updated favorites list
+     */
     private class RemoveFavoriteAsyncTask extends AsyncTask<Place, Void, Void> {
 
         private String placeName;

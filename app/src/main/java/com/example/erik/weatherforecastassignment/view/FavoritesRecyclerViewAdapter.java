@@ -15,6 +15,12 @@ import com.example.erik.weatherforecastassignment.model.Place;
 
 import java.util.List;
 
+/**
+ * Adapter class handling the FavoritesActivity recycler view items. It displays
+ * place, municipality and county name data. It has two listeners
+ * handling onClick and onLongClick, where both returns the Place object
+ * corresponding to that specific item via callback.
+ */
 public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<FavoritesRecyclerViewAdapter.ViewHolder>{
 
     private List<Place> places;

@@ -29,6 +29,10 @@ import java.util.List;
 
 import static com.example.erik.weatherforecastassignment.model.ApplicationContextProvider.getContext;
 
+/**
+ * The MainActivity activity displays the ten-day weather forecast data, allows users
+ * to search for new places and gives access to the favorites list. It is the app starting activity.
+ */
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "WeatherForecastAssignment";
@@ -41,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
 
     private GetLastUpdatedWeatherAsyncTask getLastUpdatedWeatherAsyncTask;
 
+
+    /**
+     * Fetches the current network status (WIFI, MOBILE, NO_CONNECTION) and starts a new
+     * AsyncTask that either fetches the weather data from the database or API depending on
+     * network status and time since last update.
+     */
     @Override
     protected void onStart() {
         NetworkStatus.Status status = NetworkStatus.getStatus();
@@ -50,11 +60,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
+    /**
+     * Cancels any running AsyncTask when the activity is destroyed
+     */
     @Override
     protected void onDestroy(){
         Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onDestroy");
@@ -65,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    /**
+     * Creates a new menu to display the favorites list button
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -72,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Used to decide when the favorites list button has been clicked and starts a new
+     * FavoritesActivity.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -116,6 +131,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This private AsyncTask either fetches the weather data from the database or the API depending on
+     * network status and time since last update.
+     */
     private class GetLastUpdatedWeatherAsyncTask extends AsyncTask<NetworkStatus.Status, Void, List<WeatherForecast>>{
 
         private NetworkStatus.Status status;

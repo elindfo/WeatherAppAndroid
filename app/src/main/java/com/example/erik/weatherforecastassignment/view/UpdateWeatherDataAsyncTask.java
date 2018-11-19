@@ -7,6 +7,10 @@ import android.util.Log;
 import com.example.erik.weatherforecastassignment.model.Place;
 import com.example.erik.weatherforecastassignment.model.WeatherModel;
 
+/**
+ * This AsyncTask handles the fetching of new data from the SMHI API and
+ * the updating of the database with said data.
+ */
 public class UpdateWeatherDataAsyncTask extends AsyncTask<Place, Void, Void> {
 
     private AsyncTaskCompleteListener callback;

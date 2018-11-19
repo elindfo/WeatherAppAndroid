@@ -19,6 +19,10 @@ import java.util.List;
 
 //https://www.youtube.com/watch?v=Vyqz_-sJGFk
 
+/**
+ * Adapter class handling the MainActivity recycler view items. It displays
+ * an image representing the current weather, the temperature in celcius and date.
+ */
 public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerViewAdapter.ViewHolder>{
 
     private List<WeatherForecast> weatherForecasts;
