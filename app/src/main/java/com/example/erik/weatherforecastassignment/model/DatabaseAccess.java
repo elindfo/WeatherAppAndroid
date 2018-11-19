@@ -4,12 +4,12 @@ import java.util.Date;
 import java.util.List;
 
 public interface DatabaseAccess {
-    Date findLatestEntryTime();
+    Date findLastEntryTime();
     void deleteAndInsertAll(List<WeatherForecast> weatherForecasts);
     List<WeatherForecast> getAllForecasts();
     WeatherForecast getLast();
-    boolean isFavourite(Place place);
-    boolean addFavourite(Place place);
-    void removeFavourite(Place place);
-    List<Place> getFavourites();
+    boolean isFavorite(Place place);
+    boolean addFavorite(Place place);
+    void removeFavorite(Place place);
+    List<Place> getFavorites();
 }

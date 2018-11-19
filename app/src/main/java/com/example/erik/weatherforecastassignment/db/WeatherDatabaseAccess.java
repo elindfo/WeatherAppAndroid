@@ -33,7 +33,7 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     }
 
     @Override
-    public Date findLatestEntryTime() {
+    public Date findLastEntryTime() {
         return weatherDatabase.weatherDao().findLatestEntryTime();
     }
 
@@ -55,22 +55,22 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     }
 
     @Override
-    public boolean isFavourite(Place place) {
+    public boolean isFavorite(Place place) {
         return weatherDatabase.favouriteDao().exists(place.getGeonameId()) > 0;
     }
 
     @Override
-    public boolean addFavourite(Place place) {
+    public boolean addFavorite(Place place) {
         return weatherDatabase.favouriteDao().insert(convertFromPlace(place)) > 0;
     }
 
     @Override
-    public void removeFavourite(Place place) {
+    public void removeFavorite(Place place) {
         weatherDatabase.favouriteDao().delete(convertFromPlace(place));
     }
 
     @Override
-    public List<Place> getFavourites() {
+    public List<Place> getFavorites() {
         return convertFromFavouriteEntityList(weatherDatabase.favouriteDao().findAll());
     }
 
@@ -107,15 +107,16 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     }
 
     private WeatherForecast convertFromWeatherEntity(WeatherEntity weatherEntity){
-        WeatherForecast wf = new WeatherForecast();
-        wf.setPlace(weatherEntity.getPlace());
-        wf.setApprovedTime(StringDateTool.getDateFromISO8601String(weatherEntity.getApprovedTime()));
-        wf.setValidTime(StringDateTool.getDateFromISO8601String(weatherEntity.getValidTime()));
-        wf.setTValue(weatherEntity.getTValue());
-        wf.setTccMeanValue(weatherEntity.getTccMeanValue());
-        wf.setWsymb2(weatherEntity.getWsymb2());
-        wf.setLongitude(weatherEntity.getLongitude());
-        wf.setLatitude(weatherEntity.getLatitude());
+        WeatherForecast wf = new WeatherForecast(
+                StringDateTool.getDateFromISO8601String(weatherEntity.getApprovedTime()),
+                StringDateTool.getDateFromISO8601String(weatherEntity.getValidTime()),
+                weatherEntity.getTValue(),
+                weatherEntity.getTccMeanValue(),
+                weatherEntity.getWsymb2(),
+                weatherEntity.getLongitude(),
+                weatherEntity.getLatitude(),
+                weatherEntity.getPlace()
+        );
         return wf;
     }
 

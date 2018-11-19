@@ -13,7 +13,17 @@ public class WeatherForecast {
     private double latitude;
     private String place;
 
-    public WeatherForecast() {
+    public WeatherForecast(){}
+
+    public WeatherForecast(Date approvedTime, Date validTime, double tValue, double tccMeanValue, int wsymb2, double longitude, double latitude, String place) {
+        this.approvedTime = approvedTime;
+        this.validTime = validTime;
+        this.tValue = tValue;
+        this.tccMeanValue = tccMeanValue;
+        this.wsymb2 = wsymb2;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.place = place;
     }
 
     public Date getApprovedTime() {

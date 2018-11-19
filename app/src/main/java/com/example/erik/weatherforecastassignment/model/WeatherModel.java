@@ -32,7 +32,7 @@ public class WeatherModel {
 
         Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: Fetching forecasts");
 
-        Date latestEntryTime = weatherDatabaseAccess.findLatestEntryTime();
+        Date latestEntryTime = weatherDatabaseAccess.findLastEntryTime();
         latestEntryTime = latestEntryTime == null ? new Date(0) : latestEntryTime;
         long latestEntryTimeInMillis = latestEntryTime.getTime();
 
@@ -75,33 +75,8 @@ public class WeatherModel {
         else{
             Log.d("WeatherForecastAssignment", this.getClass()
                     .getSimpleName() + ": getLastUpdatedWeatherForecasts: Timelimit " + timeLimit / 60000 + " minutes NOT exceeded, fetching data from database");
-            List<WeatherForecast> weatherForecasts = weatherDatabaseAccess.getAllForecasts();
-            for(WeatherForecast wf : weatherForecasts){
-                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: Place fetched: " + wf.getPlace());
-            }
             return weatherDatabaseAccess.getAllForecasts();
         }
-    }
-
-    public List<WeatherForecast> getWeatherForecastsByPlace(String place) {
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByPlace: Fetching forecasts for " + place);
-        List<Place> places = weatherProvider.getPlaceData(place);
-        if(places != null && places.size() > 0){
-            List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(places.get(0).getLongitude(), places.get(0).getLatitude());
-            if(weatherForecasts != null && weatherForecasts.size() > 0){
-                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: Storing " + weatherForecasts.size() + " new forecasts.");
-                //TODO ADD PLACE IN FORECAST
-                for(WeatherForecast wf : weatherForecasts){
-                    wf.setPlace(places.get(0).getPlace());
-                }
-                weatherDatabaseAccess.deleteAndInsertAll(weatherForecasts);
-            }
-            else{
-                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoordinates: No forecasts found for location");
-            }
-            return weatherForecasts;
-        }
-        return new ArrayList<>();
     }
 
     public void setWeatherForecastsByPlace(Place place) {
@@ -123,19 +98,19 @@ public class WeatherModel {
         return weatherProvider.getPlaceData(place);
     }
 
-    public boolean isFavourite(Place place){
-        return weatherDatabaseAccess.isFavourite(place);
+    public boolean isFavorite(Place place){
+        return weatherDatabaseAccess.isFavorite(place);
     }
 
-    public boolean addFavourite(Place place){
-        return weatherDatabaseAccess.addFavourite(place);
+    public boolean addFavorite(Place place){
+        return weatherDatabaseAccess.addFavorite(place);
     }
 
-    public void removeFavourite(Place place){
-        weatherDatabaseAccess.removeFavourite(place);
+    public void removeFavorite(Place place){
+        weatherDatabaseAccess.removeFavorite(place);
     }
 
-    public List<Place> getFavourites() {
-        return weatherDatabaseAccess.getFavourites();
+    public List<Place> getFavorites() {
+        return weatherDatabaseAccess.getFavorites();
     }
 }

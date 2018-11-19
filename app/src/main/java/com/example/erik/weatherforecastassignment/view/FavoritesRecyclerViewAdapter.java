@@ -15,13 +15,13 @@ import com.example.erik.weatherforecastassignment.model.Place;
 
 import java.util.List;
 
-public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<FavouritesRecyclerViewAdapter.ViewHolder>{
+public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<FavoritesRecyclerViewAdapter.ViewHolder>{
 
     private List<Place> places;
     private Context context;
     private OnItemClick callback;
 
-    public FavouritesRecyclerViewAdapter(Context context, List<Place> places, OnItemClick callback) {
+    public FavoritesRecyclerViewAdapter(Context context, List<Place> places, OnItemClick callback) {
         this.context = context;
         this.places = places;
         this.callback = callback;
@@ -30,7 +30,7 @@ public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<Favourit
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_favourites_listitem, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_favorites_listitem, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }

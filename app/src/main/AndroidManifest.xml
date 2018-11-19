@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.SearchActivity" />
-        <activity android:name=".view.FavouritesActivity"></activity>
+        <activity android:name=".view.FavoritesActivity"></activity>
     </application>
 
 </manifest>

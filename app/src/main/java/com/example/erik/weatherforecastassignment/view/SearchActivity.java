@@ -10,14 +10,10 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erik.weatherforecastassignment.R;
 import com.example.erik.weatherforecastassignment.model.Place;
-import com.example.erik.weatherforecastassignment.model.StringDateTool;
-import com.example.erik.weatherforecastassignment.model.WeatherForecast;
 import com.example.erik.weatherforecastassignment.model.WeatherModel;
 
 import java.util.ArrayList;
@@ -32,9 +28,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
 
     private GetPlaceDataAsyncTask getPlaceDataAsyncTask;
     private UpdateWeatherDataAsyncTask updateWeatherDataAsyncTask;
-    private AddToFavouriteAsyncTask addToFavouriteAsyncTask;
-
-    private WeatherModel weatherModel;
+    private AddToFavoriteAsyncTask addToFavoriteAsyncTask;
 
     @Override
     protected void onDestroy() {
@@ -44,8 +38,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
         if(updateWeatherDataAsyncTask != null){
             updateWeatherDataAsyncTask.cancel(true);
         }
-        if(addToFavouriteAsyncTask != null){
-            addToFavouriteAsyncTask.cancel(true);
+        if(addToFavoriteAsyncTask != null){
+            addToFavoriteAsyncTask.cancel(true);
         }
         super.onDestroy();
     }
@@ -58,8 +52,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
 
     @Override
     public void onLongClick(Place place) {
-        addToFavouriteAsyncTask = new AddToFavouriteAsyncTask();
-        addToFavouriteAsyncTask.execute(place);
+        addToFavoriteAsyncTask = new AddToFavoriteAsyncTask();
+        addToFavoriteAsyncTask.execute(place);
     }
 
     @Override
@@ -72,8 +66,6 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
         super.onCreate(savedInstanceState);
 
         setContentView(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? R.layout.activity_search_portrait : R.layout.activity_search_landscape);
-
-        weatherModel = WeatherModel.getInstance();
 
         getSupportActionBar().setTitle("Location");
 
@@ -133,7 +125,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: Fetching places for " + strings[0]);
             List<Place> places = null;
             if(!isCancelled()){
-                places = weatherModel.getPlaces(strings[0]);
+                places = WeatherModel.getInstance().getPlaces(strings[0]);
             }
             return places;
         }
@@ -145,7 +137,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
         }
     }
 
-    private class AddToFavouriteAsyncTask extends AsyncTask<Place, Void, Void>{
+    private class AddToFavoriteAsyncTask extends AsyncTask<Place, Void, Void>{
 
         private String placeName = "";
         private boolean added = false;
@@ -156,7 +148,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
                 Toast.makeText(getContext(), String.format(getResources().getString(R.string.weather_add_to_favourite), placeName) , Toast.LENGTH_SHORT).show();
             }
             else{
-                Toast.makeText(getContext(), "Already in favourites" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Already in favorites" , Toast.LENGTH_SHORT).show();
             }
             super.onPostExecute(v);
         }
@@ -165,10 +157,10 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
         protected Void doInBackground(Place... places) {
             placeName = places[0].getPlace();
             if(!isCancelled()){
-                if(!weatherModel.isFavourite(places[0])){
+                if(!WeatherModel.getInstance().isFavorite(places[0])){
                     String s = places[0].getGeonameId() + " " + places[0].getCounty() + " " + places[0].getMunicipality();
-                    Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: is not favourite, adding " + s);
-                    if(weatherModel.addFavourite(places[0])){
+                    Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: is not favorite, adding " + s);
+                    if(WeatherModel.getInstance().addFavorite(places[0])){
                         added = true;
                         Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: added");
                     }
@@ -177,7 +169,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
                     }
                 }
                 else{
-                    Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: already in favourites");
+                    Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: already in favorites");
                 }
             }
             return null;

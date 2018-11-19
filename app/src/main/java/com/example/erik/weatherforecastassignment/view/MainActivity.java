@@ -31,8 +31,6 @@ import static com.example.erik.weatherforecastassignment.model.ApplicationContex
 
 public class MainActivity extends AppCompatActivity {
 
-    private WeatherModel weatherModel;
-
     private TextView approvedTime;
 
     private RecyclerView mRecyclerView;
@@ -41,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText placeInputField;
     private Button updateButton;
 
-    private GetWeatherByPlaceAsyncTask getWeatherByPlaceAsyncTask;
     private GetLastUpdatedWeatherAsyncTask getLastUpdatedWeatherAsyncTask;
 
     @Override
@@ -61,10 +58,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy");
-        if(getWeatherByPlaceAsyncTask != null){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy: getWeatherByCoordAsyncTask not null");
-            getWeatherByPlaceAsyncTask.cancel(true);
-        }
         if(getLastUpdatedWeatherAsyncTask != null){
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy: getLastUpdatedWeatherAsyncTask not null");
             getLastUpdatedWeatherAsyncTask.cancel(true);
@@ -83,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favorite:
-                Intent intent = new Intent(MainActivity.this, FavouritesActivity.class);
+                Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
                 startActivity(intent);
                 return true;
             default:
@@ -96,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? R.layout.activity_main_portrait : R.layout.activity_main_landscape);
-
-        weatherModel = WeatherModel.getInstance();
 
         approvedTime = findViewById(R.id.weather_approvedtime);
         approvedTime.setText(String.format(getResources().getString(R.string.weather_approvedtime_text), "Not set"));
@@ -122,59 +113,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    private class GetWeatherByPlaceAsyncTask extends AsyncTask<String, Void, List<WeatherForecast>>{
-
-        private ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(MainActivity.this);
-            progressDialog.setMessage("Loading...");
-            progressDialog.setIndeterminate(false);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
-            if(weatherForecasts != null && weatherForecasts.size() > 0){
-                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating recyclerView");
-                getSupportActionBar().setTitle(String.format("Weather Forecast - %s" ,weatherForecasts.get(0).getPlace()));
-                approvedTime.setText(String.format(getResources()
-                                .getString(R.string.weather_approvedtime_text),
-                        StringDateTool.getDisplayableStringFromDate(weatherForecasts.get(0).getApprovedTime())));
-                mAdapter = new MainRecyclerViewAdapter(getApplicationContext(), weatherForecasts);
-                mRecyclerView.setAdapter(mAdapter);
-            }
-            else{
-                Toast.makeText(MainActivity.this, getResources().getString(R.string.weather_location_not_found_string), Toast.LENGTH_SHORT).show();
-            }
-            if(progressDialog.isShowing()){
-                progressDialog.dismiss();
-            }
-            super.onPostExecute(weatherForecasts);
-        }
-
-        @Override
-        protected List<WeatherForecast> doInBackground(String... strings) {
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: Fetching forecasts for " + strings[0]);
-            List<WeatherForecast> weatherForecasts = null;
-            if(!isCancelled()){
-                weatherForecasts = weatherModel
-                        .getWeatherForecastsByPlace(strings[0]);
-            }
-            return weatherForecasts;
-        }
-
-        @Override
-        protected void onCancelled(){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onCancelled");
-            super.onCancelled();
-        }
     }
 
     private class GetLastUpdatedWeatherAsyncTask extends AsyncTask<NetworkStatus.Status, Void, List<WeatherForecast>>{
@@ -222,8 +160,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: networkStatus: " + status + " - Loading previous data");
             List<WeatherForecast> weatherForecasts = null;
             if(!isCancelled()){
-                weatherForecasts = weatherModel
-                        .getLastUpdatedWeatherForecasts(status);
+                weatherForecasts = WeatherModel.getInstance().getLastUpdatedWeatherForecasts(status);
             }
             return weatherForecasts;
         }
