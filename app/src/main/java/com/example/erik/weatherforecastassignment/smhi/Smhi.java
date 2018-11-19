@@ -151,7 +151,7 @@ public class Smhi implements WeatherProvider {
         }
 
         /**
-         * Fetches weather forecast data and converts it to a WeatherData objects
+         * Fetches weather forecast data and converts it to WeatherData
          * @param requestUrl The composed SMHI API url to be used in the request
          * @return WeatherData object containing the json information
          */
@@ -172,9 +172,9 @@ public class Smhi implements WeatherProvider {
         }
 
         /**
-         * Fetches place data and converts it to a PlaceData array of objects
+         * Fetches place data and converts it to a PlaceData array
          * @param requestUrl The composed SMHI API url to be used in the request
-         * @return Array of Placedata objects containing the json information
+         * @return Array of PlaceData objects containing the json information
          */
         public PlaceData[] getPlaceData(String requestUrl){
             Log.d(Smhi.TAG, this.getClass().getSimpleName() + ": getWeatherData: fetching place data from URL: " + requestUrl);
