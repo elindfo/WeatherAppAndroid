@@ -28,6 +28,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+/**
+ * This singleton class handles API requests to SMHI and has methods used
+ * to access both Place and Weather Forecast data. The methods are provided
+ * by the implemented WeatherProvider interface.
+ */
 public class Smhi implements WeatherProvider {
 
     public static final String TAG = "WeatherForecastAssignment";
@@ -46,6 +51,13 @@ public class Smhi implements WeatherProvider {
         return smhi;
     }
 
+    /**
+     * This method is used to find weather data by coordinate search. After fetching the data
+     * it converts it from the created json objects to WeatherForecast model objects
+     * @param lon The longitude of the location
+     * @param lat The latitude of the location
+     * @return List of WeatherForecast model objects
+     */
     @Override
     public List<WeatherForecast> getWeatherForecastsByCoord(double lon, double lat){
 
@@ -91,6 +103,12 @@ public class Smhi implements WeatherProvider {
         return weatherForecasts;
     }
 
+    /**
+     * This method is used to find place data by name. After fetching the data
+     * it converts it from the created json objects to Place model objects
+     * @param place The name of the place
+     * @return List of Place model objects
+     */
     @Override
     public List<Place> getPlaceData(String place) {
 
@@ -120,6 +138,10 @@ public class Smhi implements WeatherProvider {
         return places;
     }
 
+    /**
+     * This private class handles the actual requests and connection to the API. It converts the
+     * received json string to the corresponding objects.
+     */
     private class SmhiRequest{
 
         private Gson gson;
@@ -128,6 +150,11 @@ public class Smhi implements WeatherProvider {
             gson = new Gson();
         }
 
+        /**
+         * Fetches weather forecast data and converts it to a WeatherData objects
+         * @param requestUrl The composed SMHI API url to be used in the request
+         * @return WeatherData object containing the json information
+         */
         public WeatherData getWeatherData(String requestUrl){
             Log.d(Smhi.TAG, this.getClass().getSimpleName() + ": getWeatherData: fetching weather data from URL: " + requestUrl);
             URL url;
@@ -144,6 +171,11 @@ public class Smhi implements WeatherProvider {
             return null;
         }
 
+        /**
+         * Fetches place data and converts it to a PlaceData array of objects
+         * @param requestUrl The composed SMHI API url to be used in the request
+         * @return Array of Placedata objects containing the json information
+         */
         public PlaceData[] getPlaceData(String requestUrl){
             Log.d(Smhi.TAG, this.getClass().getSimpleName() + ": getWeatherData: fetching place data from URL: " + requestUrl);
 

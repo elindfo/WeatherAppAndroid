@@ -1,5 +1,8 @@
 package com.example.erik.weatherforecastassignment.smhi;
 
+/**
+ * Class used by Gson to convert from JSON to WeatherData
+ */
 public class WeatherData {
     private String approvedTime;
     private String referenceTime;
