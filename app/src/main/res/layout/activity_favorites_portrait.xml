@@ -7,7 +7,7 @@
     tools:context=".view.FavoritesActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/weather_favourites_list"
+        android:id="@+id/weather_favorites_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"

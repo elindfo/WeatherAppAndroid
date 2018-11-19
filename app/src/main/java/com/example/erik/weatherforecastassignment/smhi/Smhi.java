@@ -30,6 +30,8 @@ import java.util.TimeZone;
 
 public class Smhi implements WeatherProvider {
 
+    public static final String TAG = "WeatherForecastAssignment";
+
     private static Smhi smhi;
     private SmhiRequest smhiRequest;
 
@@ -48,15 +50,16 @@ public class Smhi implements WeatherProvider {
     public List<WeatherForecast> getWeatherForecastsByCoord(double lon, double lat){
 
         String requestUrl = String.format("https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/%.6f/lat/%.6f/data.json", lon, lat);
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoord: Getting forecasts for " + lon + ", " + lat);
+
+        Log.d(Smhi.TAG, this.getClass().getSimpleName() + ": getWeatherForecastsByCoord: getting forecasts for " + lon + ", " + lat);
         WeatherData data = smhiRequest.getWeatherData(requestUrl);
 
         if(data == null || data.getTimeSeries().length < 1){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoord: No forecasts found");
+            Log.d(Smhi.TAG, this.getClass().getSimpleName() + ": getWeatherForecastsByCoord: no forecasts found");
             return null;
         }
 
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByCoord: Found forecasts");
+        Log.d(Smhi.TAG, this.getClass().getSimpleName() + ": getWeatherForecastsByCoord: found forecasts");
 
         List<WeatherForecast> weatherForecasts = new ArrayList<>();
 
@@ -95,7 +98,7 @@ public class Smhi implements WeatherProvider {
 
         List<PlaceData> data = Arrays.asList(smhiRequest.getPlaceData(requestUrl));
 
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getPlaceData: Found " + data.size() + " places.");
+        Log.d(Smhi.TAG, this.getClass().getSimpleName() + ": getPlaceData: Found " + data.size() + " places.");
 
         if(data == null){
             return null;
@@ -120,12 +123,13 @@ public class Smhi implements WeatherProvider {
     private class SmhiRequest{
 
         private Gson gson;
+
         public SmhiRequest(){
             gson = new Gson();
         }
 
         public WeatherData getWeatherData(String requestUrl){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherData: Fetching weather data from URL: " + requestUrl);
+            Log.d(Smhi.TAG, this.getClass().getSimpleName() + ": getWeatherData: fetching weather data from URL: " + requestUrl);
             URL url;
             URLConnection urlConnection;
             try{
@@ -142,7 +146,7 @@ public class Smhi implements WeatherProvider {
         }
 
         public PlaceData[] getPlaceData(String requestUrl){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherData: Fetching place data from URL: " + requestUrl);
+            Log.d(Smhi.TAG, this.getClass().getSimpleName() + ": getWeatherData: fetching place data from URL: " + requestUrl);
 
             URL url;
             URLConnection urlConnection;

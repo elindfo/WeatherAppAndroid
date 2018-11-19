@@ -57,10 +57,10 @@ public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<Favorites
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            place = itemView.findViewById(R.id.weather_favourites_recycler_view_item_place);
-            municipality = itemView.findViewById(R.id.weather_favourites_recycler_view_item_municipality);
-            county = itemView.findViewById(R.id.weather_favourites_recycler_view_item_county);
-            layout = itemView.findViewById(R.id.weather_favourites_recycler_view_layout);
+            place = itemView.findViewById(R.id.weather_favorites_recycler_view_item_place);
+            municipality = itemView.findViewById(R.id.weather_favorites_recycler_view_item_municipality);
+            county = itemView.findViewById(R.id.weather_favorites_recycler_view_item_county);
+            layout = itemView.findViewById(R.id.weather_favorites_recycler_view_layout);
 
             itemView.setOnClickListener((v) -> {
                 int pos = getAdapterPosition();

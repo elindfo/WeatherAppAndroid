@@ -33,12 +33,15 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
     @Override
     protected void onDestroy() {
         if(getPlaceDataAsyncTask != null){
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onDestroy: cancelling getPlaceDataAsyncTask");
             getPlaceDataAsyncTask.cancel(true);
         }
         if(updateWeatherDataAsyncTask != null){
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onDestroy: cancelling updateWeatherDataAsyncTask");
             updateWeatherDataAsyncTask.cancel(true);
         }
         if(addToFavoriteAsyncTask != null){
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onDestroy: cancelling addToFavoriteAsyncTask");
             addToFavoriteAsyncTask.cancel(true);
         }
         super.onDestroy();
@@ -46,28 +49,32 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
 
     @Override
     public void onClick(Place place) {
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onClick: " + place.getPlace());
         updateWeatherDataAsyncTask = new UpdateWeatherDataAsyncTask(this, new ProgressDialog(this));
         updateWeatherDataAsyncTask.execute(place);
     }
 
     @Override
     public void onLongClick(Place place) {
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onLongClick: " + place.getPlace());
         addToFavoriteAsyncTask = new AddToFavoriteAsyncTask();
         addToFavoriteAsyncTask.execute(place);
     }
 
     @Override
     public void onTaskComplete(Object result) {
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onTaskComplete: close activity");
         finish();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onCreate");
         super.onCreate(savedInstanceState);
 
         setContentView(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? R.layout.activity_search_portrait : R.layout.activity_search_landscape);
 
-        getSupportActionBar().setTitle("Location");
+        getSupportActionBar().setTitle(R.string.weather_search_title);
 
         searchRecyclerView = findViewById(R.id.weather_place_search_list);
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -107,7 +114,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
         @Override
         protected void onPostExecute(List<Place> places) {
             if(places != null && places.size() > 0){
-                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating recyclerView");
+                Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onPostExecute: Updating weather list");
                 searchRecyclerViewAdapter = new SearchRecyclerViewAdapter(getApplicationContext(), places, callback);
                 searchRecyclerView.setAdapter(searchRecyclerViewAdapter);
             }
@@ -122,7 +129,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
 
         @Override
         protected List<Place> doInBackground(String... strings) {
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: Fetching places for " + strings[0]);
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": doInBackGround: Fetching places for " + strings[0]);
             List<Place> places = null;
             if(!isCancelled()){
                 places = WeatherModel.getInstance().getPlaces(strings[0]);
@@ -132,7 +139,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
 
         @Override
         protected void onCancelled(){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onCancelled");
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onCancelled");
             super.onCancelled();
         }
     }
@@ -144,8 +151,9 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
 
         @Override
         protected void onPostExecute(Void v) {
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onPostExecute");
             if(added){
-                Toast.makeText(getContext(), String.format(getResources().getString(R.string.weather_add_to_favourite), placeName) , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), String.format(getResources().getString(R.string.weather_add_to_favorite), placeName) , Toast.LENGTH_SHORT).show();
             }
             else{
                 Toast.makeText(getContext(), "Already in favorites" , Toast.LENGTH_SHORT).show();
@@ -159,17 +167,17 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
             if(!isCancelled()){
                 if(!WeatherModel.getInstance().isFavorite(places[0])){
                     String s = places[0].getGeonameId() + " " + places[0].getCounty() + " " + places[0].getMunicipality();
-                    Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: is not favorite, adding " + s);
+                    Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": doInBackground: is not favorite, adding " + s);
                     if(WeatherModel.getInstance().addFavorite(places[0])){
                         added = true;
-                        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: added");
+                        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": doInBackground: added " + placeName + " to favorites");
                     }
                     else{
-                        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: unable to add");
+                        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": doInBackground: unable to add " + placeName + " to favorites");
                     }
                 }
                 else{
-                    Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground: already in favorites");
+                    Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": doInBackground: " + placeName + " already in favorites");
                 }
             }
             return null;
@@ -177,7 +185,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
 
         @Override
         protected void onCancelled(){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onCancelled");
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onCancelled");
             super.onCancelled();
         }
     }

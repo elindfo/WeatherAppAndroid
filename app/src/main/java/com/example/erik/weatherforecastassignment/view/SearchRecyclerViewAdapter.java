@@ -42,7 +42,6 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Log.d("MainRecyclerViewAdapter", "onBindViewHolder: called");
         viewHolder.place.setText(places.get(i).getPlace());
         viewHolder.municipality.setText(places.get(i).getMunicipality());
         viewHolder.county.setText(places.get(i).getCounty());
@@ -55,17 +54,16 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView place;
-        TextView municipality;
-        TextView county;
-        RelativeLayout layout;
+        private TextView place;
+        private TextView municipality;
+        private TextView county;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             place = itemView.findViewById(R.id.weather_search_recycler_view_item_place);
             municipality = itemView.findViewById(R.id.weather_search_recycler_view_item_municipality);
             county = itemView.findViewById(R.id.weather_search_recycler_view_item_county);
-            layout = itemView.findViewById(R.id.weather_search_recycler_view_layout);
+
             itemView.setOnClickListener((v) -> {
                 int pos = getAdapterPosition();
                 if(pos != RecyclerView.NO_POSITION){
@@ -82,8 +80,6 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
                 }
                 return true;
             });
-
-
         }
     }
 }

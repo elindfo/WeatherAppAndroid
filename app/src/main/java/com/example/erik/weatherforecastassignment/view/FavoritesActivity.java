@@ -22,8 +22,8 @@ import static com.example.erik.weatherforecastassignment.model.ApplicationContex
 
 public class FavoritesActivity extends AppCompatActivity implements OnItemClick, AsyncTaskCompleteListener{
 
-    private RecyclerView favouritesRecyclerView;
-    private RecyclerView.Adapter favouritesRecyclerViewAdapter;
+    private RecyclerView favoritesRecyclerView;
+    private RecyclerView.Adapter favoritesRecyclerViewAdapter;
 
     private GetFavoritesAsyncTask getFavoritesAsyncTask;
     private RemoveFavoriteAsyncTask removeFavoriteAsyncTask;
@@ -32,12 +32,15 @@ public class FavoritesActivity extends AppCompatActivity implements OnItemClick,
     @Override
     protected void onDestroy() {
         if(getFavoritesAsyncTask != null){
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onDestroy: cancelling getFavoritesAsyncTask");
             getFavoritesAsyncTask.cancel(true);
         }
         if(removeFavoriteAsyncTask != null){
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onDestroy: cancelling removeFavoriteAsyncTask");
             removeFavoriteAsyncTask.cancel(true);
         }
         if(updateWeatherDataAsyncTask != null){
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onDestroy: cancelling updateWeatherDataAsyncTask");
             updateWeatherDataAsyncTask.cancel(true);
         }
         super.onDestroy();
@@ -45,35 +48,39 @@ public class FavoritesActivity extends AppCompatActivity implements OnItemClick,
 
     @Override
     public void onClick(Place place) {
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onClick: " + place.getPlace());
         updateWeatherDataAsyncTask = new UpdateWeatherDataAsyncTask(this, new ProgressDialog(this));
         updateWeatherDataAsyncTask.execute(place);
     }
 
     @Override
     public void onTaskComplete(Object result) {
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onTaskComplete");
         finish();
     }
 
     @Override
     public void onLongClick(Place place){
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onLongClick: " + place.getPlace());
         removeFavoriteAsyncTask = new RemoveFavoriteAsyncTask();
         removeFavoriteAsyncTask.execute(place);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onCreate");
         super.onCreate(savedInstanceState);
 
         setContentView(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? R.layout.activity_favorites_portrait : R.layout.activity_favorites_landscape);
 
-        getSupportActionBar().setTitle("Favorites");
+        getSupportActionBar().setTitle(R.string.weather_favorites_title);
 
-        favouritesRecyclerView = findViewById(R.id.weather_favourites_list);
-        favouritesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        favouritesRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+        favoritesRecyclerView = findViewById(R.id.weather_favorites_list);
+        favoritesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        favoritesRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
                 DividerItemDecoration.VERTICAL));
 
-        favouritesRecyclerViewAdapter = new FavoritesRecyclerViewAdapter(getApplicationContext(), new ArrayList<>(), null);
+        favoritesRecyclerViewAdapter = new FavoritesRecyclerViewAdapter(getApplicationContext(), new ArrayList<>(), null);
 
         getFavoritesAsyncTask = new GetFavoritesAsyncTask(this);
         getFavoritesAsyncTask.execute();
@@ -91,9 +98,9 @@ public class FavoritesActivity extends AppCompatActivity implements OnItemClick,
         @Override
         protected void onPostExecute(List<Place> places) {
             if(places != null){
-                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating favorites list");
-                favouritesRecyclerViewAdapter = new FavoritesRecyclerViewAdapter(getApplicationContext(), places, callback);
-                favouritesRecyclerView.setAdapter(favouritesRecyclerViewAdapter);
+                Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onPostExecute: Updating favorites list");
+                favoritesRecyclerViewAdapter = new FavoritesRecyclerViewAdapter(getApplicationContext(), places, callback);
+                favoritesRecyclerView.setAdapter(favoritesRecyclerViewAdapter);
             }
             else{
                 Toast.makeText(FavoritesActivity.this, getResources().getString(R.string.weather_location_not_found_string), Toast.LENGTH_SHORT).show();
@@ -103,7 +110,7 @@ public class FavoritesActivity extends AppCompatActivity implements OnItemClick,
 
         @Override
         protected List<Place> doInBackground(Void... voids) {
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: Fetching favorites");
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": doInBackGround: Fetching favorites");
             List<Place> places = null;
             if(!isCancelled()){
                 places = WeatherModel.getInstance().getFavorites();
@@ -113,7 +120,7 @@ public class FavoritesActivity extends AppCompatActivity implements OnItemClick,
 
         @Override
         protected void onCancelled(){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onCancelled");
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onCancelled");
             super.onCancelled();
         }
     }
@@ -126,14 +133,14 @@ public class FavoritesActivity extends AppCompatActivity implements OnItemClick,
         protected void onPostExecute(Void v) {
             getFavoritesAsyncTask = new GetFavoritesAsyncTask(FavoritesActivity.this);
             getFavoritesAsyncTask.execute();
-            Toast.makeText(getContext(), String.format(getResources().getString(R.string.weather_remove_from_favourite), placeName) , Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), String.format(getResources().getString(R.string.weather_remove_from_favorite), placeName) , Toast.LENGTH_SHORT).show();
             super.onPostExecute(v);
         }
 
         @Override
         protected Void doInBackground(Place... places) {
             placeName = places[0].getPlace();
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: Removing " + places[0].getCounty());
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": doInBackGround: removing " + places[0].getCounty());
             if(!isCancelled()){
                 WeatherModel.getInstance().removeFavorite(places[0]);
             }
@@ -142,7 +149,7 @@ public class FavoritesActivity extends AppCompatActivity implements OnItemClick,
 
         @Override
         protected void onCancelled(){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onCancelled");
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onCancelled");
             super.onCancelled();
         }
     }

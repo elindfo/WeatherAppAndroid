@@ -19,6 +19,7 @@ public class UpdateWeatherDataAsyncTask extends AsyncTask<Place, Void, Void> {
 
     @Override
     protected void onPreExecute() {
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onPreExecute");
         super.onPreExecute();
         progressDialog.setMessage("Loading...");
         progressDialog.setIndeterminate(false);
@@ -29,6 +30,7 @@ public class UpdateWeatherDataAsyncTask extends AsyncTask<Place, Void, Void> {
 
     @Override
     protected void onPostExecute(Void v) {
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onPostExecute");
         if(progressDialog.isShowing()){
             progressDialog.dismiss();
         }
@@ -38,7 +40,7 @@ public class UpdateWeatherDataAsyncTask extends AsyncTask<Place, Void, Void> {
 
     @Override
     protected Void doInBackground(Place... places) {
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground");
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": doInBackground");
         if(!isCancelled()){
             WeatherModel.getInstance().setWeatherForecastsByPlace(places[0]);
         }
@@ -47,7 +49,7 @@ public class UpdateWeatherDataAsyncTask extends AsyncTask<Place, Void, Void> {
 
     @Override
     protected void onCancelled(){
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onCancelled");
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onCancelled");
         super.onCancelled();
     }
 }

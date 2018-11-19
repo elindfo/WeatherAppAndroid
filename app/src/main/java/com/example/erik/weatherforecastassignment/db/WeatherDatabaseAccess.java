@@ -15,6 +15,8 @@ import java.util.List;
 
 public class WeatherDatabaseAccess implements DatabaseAccess {
 
+    public static final String TAG = "WeatherForecastAssignment";
+
     private static WeatherDatabaseAccess weatherDatabaseAccess;
     private WeatherDatabase weatherDatabase;
 
@@ -34,43 +36,52 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
 
     @Override
     public Date findLastEntryTime() {
+        Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": findLastEntryTime");
         return weatherDatabase.weatherDao().findLatestEntryTime();
     }
 
     @Override
     public void deleteAndInsertAll(List<WeatherForecast> weatherForecasts) {
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": deleteAndInsertAll: Deleting and inserting forecasts");
+        Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": deleteAndInsertAll");
         weatherDatabase.weatherDao().deleteAndInsertAll(convertFromWeatherForecastList(weatherForecasts));
     }
 
     @Override
     public List<WeatherForecast> getAllForecasts() {
+        Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": getAllForecasts");
         List<WeatherEntity> weatherEntities = weatherDatabase.weatherDao().findAll();
         return convertFromWeatherEntityList(weatherEntities);
     }
 
     @Override
     public WeatherForecast getLast() {
+        Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": getLast");
         return convertFromWeatherEntity(weatherDatabase.weatherDao().getEntry());
     }
 
     @Override
     public boolean isFavorite(Place place) {
-        return weatherDatabase.favouriteDao().exists(place.getGeonameId()) > 0;
+        boolean isFavourite = weatherDatabase.favouriteDao().exists(place.getGeonameId()) > 0;
+        Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": isFavourite: " + isFavourite);
+        return isFavourite;
     }
 
     @Override
     public boolean addFavorite(Place place) {
-        return weatherDatabase.favouriteDao().insert(convertFromPlace(place)) > 0;
+        boolean isAdded = weatherDatabase.favouriteDao().insert(convertFromPlace(place)) > 0;
+        Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": addFavourite: " + isAdded);
+        return isAdded;
     }
 
     @Override
     public void removeFavorite(Place place) {
+        Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": removeFavorite");
         weatherDatabase.favouriteDao().delete(convertFromPlace(place));
     }
 
     @Override
     public List<Place> getFavorites() {
+        Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": getFavorites");
         return convertFromFavouriteEntityList(weatherDatabase.favouriteDao().findAll());
     }
 

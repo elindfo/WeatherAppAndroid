@@ -11,6 +11,8 @@ import java.util.List;
 
 public class WeatherModel {
 
+    public static final String TAG = "WeatherForecastAssignment";
+
     private static WeatherModel weatherModel;
 
     private WeatherProvider weatherProvider;
@@ -29,15 +31,14 @@ public class WeatherModel {
     }
 
     public List<WeatherForecast> getLastUpdatedWeatherForecasts(NetworkStatus.Status status) {
-
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: Fetching forecasts");
+        Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: fetching forecasts");
 
         Date latestEntryTime = weatherDatabaseAccess.findLastEntryTime();
         latestEntryTime = latestEntryTime == null ? new Date(0) : latestEntryTime;
         long latestEntryTimeInMillis = latestEntryTime.getTime();
 
         if(latestEntryTimeInMillis <= 0){ //No earlier search made so wont be able to update from API or DB
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: No earlier search made, returning 0 forecasts");
+            Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: no earlier search made, returning 0 forecasts");
             return new ArrayList<>();
         }
 
@@ -46,26 +47,26 @@ public class WeatherModel {
         switch(status){
             case WIFI:{ //Older than 10 minues
                 timeLimit = 600000;
-                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: On WIFI, timelimit set to " + timeLimit);
+                Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: on WIFI, timelimit set to " + timeLimit);
                 break;
             }
             case MOBILE:{ //Older than 60 minutes
                 timeLimit = 3600000;
-                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: On MOBILE, timelimit set to " + timeLimit);
+                Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: on MOBILE, timelimit set to " + timeLimit);
                 break;
             }
             case NO_CONNECTION:{ //Unable to fetch, if no stored data, return empty array
                 return weatherDatabaseAccess.getAllForecasts();
             }
         }
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: Time difference: " + (currentTimeInMillis - latestEntryTimeInMillis));
+        Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: time difference: " + (currentTimeInMillis - latestEntryTimeInMillis));
         if(currentTimeInMillis - latestEntryTimeInMillis > timeLimit){
-            Log.d("WeatherForecastAssignment", this.getClass()
-                    .getSimpleName() + ": getLastUpdatedWeatherForecasts: Timelimit " + timeLimit / 60000 + " minutes exceeded, fetching data from API");
+            Log.d(WeatherModel.TAG, this.getClass()
+                    .getSimpleName() + ": getLastUpdatedWeatherForecasts: timelimit " + timeLimit / 60000 + " minutes exceeded, fetching data from API");
             WeatherForecast weatherForecast = weatherDatabaseAccess.getLast();
             List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(weatherForecast.getLongitude(), weatherForecast.getLatitude());
-            Log.d("WeatherForecastAssignment", this.getClass()
-                    .getSimpleName() + ": getLastUpdatedWeatherForecasts: Fetched " + weatherForecasts.size() + " new forecasts for location " + weatherForecast.getPlace());
+            Log.d(WeatherModel.TAG, this.getClass()
+                    .getSimpleName() + ": getLastUpdatedWeatherForecasts: fetched " + weatherForecasts.size() + " new forecasts for location " + weatherForecast.getPlace());
             for(WeatherForecast wf : weatherForecasts){
                 wf.setPlace(weatherForecast.getPlace());
             }
@@ -73,44 +74,49 @@ public class WeatherModel {
             return weatherForecasts;
         }
         else{
-            Log.d("WeatherForecastAssignment", this.getClass()
-                    .getSimpleName() + ": getLastUpdatedWeatherForecasts: Timelimit " + timeLimit / 60000 + " minutes NOT exceeded, fetching data from database");
+            Log.d(WeatherModel.TAG, this.getClass()
+                    .getSimpleName() + ": getLastUpdatedWeatherForecasts: timelimit " + timeLimit / 60000 + " minutes NOT exceeded, fetching data from database");
             return weatherDatabaseAccess.getAllForecasts();
         }
     }
 
     public void setWeatherForecastsByPlace(Place place) {
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": setWeatherForecastsByPlace: Fetching forecasts for " + place.getPlace());
+        Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": setWeatherForecastsByPlace: fetching forecasts for " + place.getPlace());
         List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(place.getLongitude(), place.getLatitude());
         if(weatherForecasts != null && weatherForecasts.size() > 0){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByPlace: Storing " + weatherForecasts.size() + " new forecasts.");
+            Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getWeatherForecastsByPlace: storing " + weatherForecasts.size() + " new forecasts.");
             for(WeatherForecast wf : weatherForecasts){
                 wf.setPlace(place.getPlace());
             }
             weatherDatabaseAccess.deleteAndInsertAll(weatherForecasts);
         }
         else{
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": getWeatherForecastsByPlace: No forecasts found for location");
+            Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getWeatherForecastsByPlace: no forecasts found for location");
         }
     }
 
     public List<Place> getPlaces(String place) {
+        Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getPlaces: " + place);
         return weatherProvider.getPlaceData(place);
     }
 
     public boolean isFavorite(Place place){
+        Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": isFavorite: " + place.getPlace());
         return weatherDatabaseAccess.isFavorite(place);
     }
 
     public boolean addFavorite(Place place){
+        Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": addFavorite: " + place.getPlace());
         return weatherDatabaseAccess.addFavorite(place);
     }
 
     public void removeFavorite(Place place){
+        Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": removeFavorite: " + place.getPlace());
         weatherDatabaseAccess.removeFavorite(place);
     }
 
     public List<Place> getFavorites() {
+        Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getFavorites");
         return weatherDatabaseAccess.getFavorites();
     }
 }

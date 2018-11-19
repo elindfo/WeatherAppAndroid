@@ -31,11 +31,11 @@ import static com.example.erik.weatherforecastassignment.model.ApplicationContex
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView approvedTime;
+    public static final String TAG = "WeatherForecastAssignment";
 
+    private TextView approvedTime;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-
     private EditText placeInputField;
     private Button updateButton;
 
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         NetworkStatus.Status status = NetworkStatus.getStatus();
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onStart: " + status);
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onStart: " + status);
         getLastUpdatedWeatherAsyncTask = new GetLastUpdatedWeatherAsyncTask();
         getLastUpdatedWeatherAsyncTask.execute(status);
         super.onStart();
@@ -57,9 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy(){
-        Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy");
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onDestroy");
         if(getLastUpdatedWeatherAsyncTask != null){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onDestroy: getLastUpdatedWeatherAsyncTask not null");
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onDestroy: cancelling getLastUpdatedWeatherAsyncTask");
             getLastUpdatedWeatherAsyncTask.cancel(true);
         }
         super.onDestroy();
@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favorite:
+                Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onOptionsItemSelected: favorite button clicked");
                 Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
                 startActivity(intent);
                 return true;
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onCreate");
         super.onCreate(savedInstanceState);
 
         setContentView(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? R.layout.activity_main_portrait : R.layout.activity_main_landscape);
@@ -101,8 +103,7 @@ public class MainActivity extends AppCompatActivity {
         updateButton = findViewById(R.id.weather_update_button);
 
         updateButton.setOnClickListener((view) -> {
-            //TODO Make async
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": updateButton: CLICKED");
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onCreate: updateButton clicked");
             String place = placeInputField.getText().toString();
             if(place.matches("")){
                 Toast.makeText(this, getResources().getString(R.string.weather_place_missing_string), Toast.LENGTH_SHORT).show();
@@ -122,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onPreExecute");
             super.onPreExecute();
             progressDialog = new ProgressDialog(MainActivity.this);
             progressDialog.setMessage("Loading...");
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<WeatherForecast> weatherForecasts) {
             if(weatherForecasts != null && weatherForecasts.size() > 0){
-                Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating recyclerView");
+                Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onPostExecute: Updating weather forecast list");
                 getSupportActionBar().setTitle(String.format("Weather Forecast - %s" ,weatherForecasts.get(0).getPlace()));
                 approvedTime.setText(String.format(getResources()
                                 .getString(R.string.weather_approvedtime_text),
@@ -157,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected List<WeatherForecast> doInBackground(NetworkStatus.Status... networkStatus) {
             status = networkStatus[0];
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackGround: networkStatus: " + status + " - Loading previous data");
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": doInBackGround: networkStatus: " + status + " - Loading previous data");
             List<WeatherForecast> weatherForecasts = null;
             if(!isCancelled()){
                 weatherForecasts = WeatherModel.getInstance().getLastUpdatedWeatherForecasts(status);
@@ -167,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onCancelled() {
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onCancelled");
+            Log.d(MainActivity.TAG, this.getClass().getSimpleName() + ": onCancelled");
             super.onCancelled();
         }
     }
