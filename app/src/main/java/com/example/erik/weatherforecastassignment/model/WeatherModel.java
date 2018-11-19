@@ -9,9 +9,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * This is the main singleton model class that is used for correspondence between the view, API and
+ * database.
+ */
 public class WeatherModel {
 
     public static final String TAG = "WeatherForecastAssignment";
+    private static final long MILLIS_PER_HOUR = 3600000;
+    private static final long MILLIS_PER_10_MINUTES = MILLIS_PER_HOUR / 6;
 
     private static WeatherModel weatherModel;
 
@@ -30,6 +36,17 @@ public class WeatherModel {
         return weatherModel;
     }
 
+    /**
+     * This method has logic that either checks the database or makes a new request to the API
+     * depending on current network status and time since last weather data was fetched and from
+     * what place. If weather data is accessible from the database, it may use those coordinates
+     * for a new API request.
+     * @param status Current network status
+     * @return Empty list of WeatherForecast if no previous weather data can be found in database.
+     *         List of cached WeatherForecast if the time limit for this connection type has not
+     *         been reached.
+     *         List of API received WeatherForecast if the time limit has been exceeded.
+     */
     public List<WeatherForecast> getLastUpdatedWeatherForecasts(NetworkStatus.Status status) {
         Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: fetching forecasts");
 
@@ -46,12 +63,12 @@ public class WeatherModel {
         long timeLimit = 0;
         switch(status){
             case WIFI:{ //Older than 10 minues
-                timeLimit = 600000;
+                timeLimit = MILLIS_PER_10_MINUTES;
                 Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: on WIFI, timelimit set to " + timeLimit);
                 break;
             }
             case MOBILE:{ //Older than 60 minutes
-                timeLimit = 3600000;
+                timeLimit = MILLIS_PER_HOUR;
                 Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getLastUpdatedWeatherForecasts: on MOBILE, timelimit set to " + timeLimit);
                 break;
             }
@@ -80,6 +97,10 @@ public class WeatherModel {
         }
     }
 
+    /**
+     * This method will fetch new weather forecast data from the API and update the database.
+     * @param place The Place used in the weather forecast search
+     */
     public void setWeatherForecastsByPlace(Place place) {
         Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": setWeatherForecastsByPlace: fetching forecasts for " + place.getPlace());
         List<WeatherForecast> weatherForecasts = weatherProvider.getWeatherForecastsByCoord(place.getLongitude(), place.getLatitude());
@@ -95,26 +116,49 @@ public class WeatherModel {
         }
     }
 
+    /**
+     * This method will fetch place data form the API.
+     * @param place The Place name used in the search
+     * @return List of found Place
+     */
     public List<Place> getPlaces(String place) {
         Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getPlaces: " + place);
         return weatherProvider.getPlaceData(place);
     }
 
+    /**
+     * This method will check if a Place is currently in the favorite list
+     * @param place The Place used in the check
+     * @return True if the Place is in the favorite list, false if not
+     */
     public boolean isFavorite(Place place){
         Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": isFavorite: " + place.getPlace());
         return weatherDatabaseAccess.isFavorite(place);
     }
 
+    /**
+     * This method will add a Place to the favorite list.
+     * @param place The Place to be added
+     * @return True if the Place was added to the favorite list, false if not
+     */
     public boolean addFavorite(Place place){
         Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": addFavorite: " + place.getPlace());
         return weatherDatabaseAccess.addFavorite(place);
     }
 
+    /**
+     * This method will remove a Place from the favorite list.
+     * @param place The Place to be removed
+     */
     public void removeFavorite(Place place){
         Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": removeFavorite: " + place.getPlace());
         weatherDatabaseAccess.removeFavorite(place);
     }
 
+    /**
+     * This method will find all Places currently in the favorite list.
+     * @return List of Place
+     */
     public List<Place> getFavorites() {
         Log.d(WeatherModel.TAG, this.getClass().getSimpleName() + ": getFavorites");
         return weatherDatabaseAccess.getFavorites();

@@ -1,5 +1,9 @@
 package com.example.erik.weatherforecastassignment.model;
 
+/**
+ * Model class that contains the values representing a Place. Contains cherry picked
+ * data from the SMHI API place data response.
+ */
 public class Place {
 
     private long geonameId;

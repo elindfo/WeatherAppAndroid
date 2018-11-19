@@ -2,6 +2,10 @@ package com.example.erik.weatherforecastassignment.model;
 
 import java.util.Date;
 
+/**
+ * Model class that contains the values representing a WeatherForecast. Contains cherry picked
+ * data from the SMHI API weather forecast response.
+ */
 public class WeatherForecast {
 
     private Date approvedTime;
