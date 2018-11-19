@@ -167,7 +167,6 @@ public class Smhi implements WeatherProvider {
                 return gson.fromJson(jsonData.toString(), WeatherData.class);
             } catch (MalformedURLException e) {
             } catch (IOException e) {
-                e.printStackTrace();
             }
             return null;
         }
@@ -190,7 +189,6 @@ public class Smhi implements WeatherProvider {
                 return gson.fromJson(jsonData.toString(), PlaceData[].class);
             } catch (MalformedURLException e) {
             } catch (IOException e) {
-                e.printStackTrace();
             }
             return new PlaceData[]{};
         }
