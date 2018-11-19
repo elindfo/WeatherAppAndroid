@@ -12,17 +12,17 @@ import java.util.List;
  * Room persistence Dao interface used to define database operations
  */
 @Dao
-public interface FavouriteDao {
+public interface FavoriteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insert(FavouriteEntity favouriteEntity);
+    long insert(FavoriteEntity favoriteEntity);
 
     @Delete
-    void delete(FavouriteEntity favouriteEntity);
+    void delete(FavoriteEntity favoriteEntity);
 
-    @Query("SELECT COUNT(*) FROM FavouriteEntity WHERE id = :id")
+    @Query("SELECT COUNT(*) FROM FavoriteEntity WHERE id = :id")
     int exists(long id);
 
-    @Query("SELECT * FROM FavouriteEntity")
-    List<FavouriteEntity> findAll();
+    @Query("SELECT * FROM FavoriteEntity")
+    List<FavoriteEntity> findAll();
 }

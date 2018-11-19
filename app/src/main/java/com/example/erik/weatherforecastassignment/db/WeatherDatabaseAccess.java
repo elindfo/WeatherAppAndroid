@@ -88,9 +88,9 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
      */
     @Override
     public boolean isFavorite(Place place) {
-        boolean isFavourite = weatherDatabase.favouriteDao().exists(place.getGeonameId()) > 0;
-        Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": isFavourite: " + isFavourite);
-        return isFavourite;
+        boolean isFavorite = weatherDatabase.favoriteDao().exists(place.getGeonameId()) > 0;
+        Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": isFavorite: " + isFavorite);
+        return isFavorite;
     }
 
     /**
@@ -100,8 +100,8 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
      */
     @Override
     public boolean addFavorite(Place place) {
-        boolean isAdded = weatherDatabase.favouriteDao().insert(convertFromPlace(place)) > 0;
-        Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": addFavourite: " + isAdded);
+        boolean isAdded = weatherDatabase.favoriteDao().insert(convertFromPlace(place)) > 0;
+        Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": addFavorite: " + isAdded);
         return isAdded;
     }
 
@@ -112,7 +112,7 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     @Override
     public void removeFavorite(Place place) {
         Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": removeFavorite");
-        weatherDatabase.favouriteDao().delete(convertFromPlace(place));
+        weatherDatabase.favoriteDao().delete(convertFromPlace(place));
     }
 
     /**
@@ -122,18 +122,18 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
     @Override
     public List<Place> getFavorites() {
         Log.d(WeatherDatabaseAccess.TAG, this.getClass().getSimpleName() + ": getFavorites");
-        return convertFromFavouriteEntityList(weatherDatabase.favouriteDao().findAll());
+        return convertFromFavoriteEntityList(weatherDatabase.favoriteDao().findAll());
     }
 
     /**
      * Private method used to convert List of FavoriteEntity to List of Place.
-     * @param favouriteEntities The List to be converted
+     * @param favoriteEntities The List to be converted
      * @return List of Place
      */
-    private List<Place> convertFromFavouriteEntityList(List<FavouriteEntity> favouriteEntities){
+    private List<Place> convertFromFavoriteEntityList(List<FavoriteEntity> favoriteEntities){
         List<Place> places = new ArrayList<>();
-        for(FavouriteEntity favouriteEntity : favouriteEntities){
-            places.add(convertFromFavouriteEntity(favouriteEntity));
+        for(FavoriteEntity favoriteEntity : favoriteEntities){
+            places.add(convertFromFavoriteEntity(favoriteEntity));
         }
         return places;
     }
@@ -179,17 +179,17 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
 
     /**
      * Private method used to convert from FavoriteEntity to Place.
-     * @param favouriteEntity The object to be converted
+     * @param favoriteEntity The object to be converted
      * @return Place
      */
-    private Place convertFromFavouriteEntity(FavouriteEntity favouriteEntity){
+    private Place convertFromFavoriteEntity(FavoriteEntity favoriteEntity){
         Place place = new Place(
-                favouriteEntity.getId(),
-                favouriteEntity.getPlace(),
-                favouriteEntity.getMunicipality(),
-                favouriteEntity.getCounty(),
-                favouriteEntity.getLongitude(),
-                favouriteEntity.getLatitude()
+                favoriteEntity.getId(),
+                favoriteEntity.getPlace(),
+                favoriteEntity.getMunicipality(),
+                favoriteEntity.getCounty(),
+                favoriteEntity.getLongitude(),
+                favoriteEntity.getLatitude()
         );
         return place;
     }
@@ -199,8 +199,8 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
      * @param place The object to be converted
      * @return FavoriteEntity
      */
-    private FavouriteEntity convertFromPlace(Place place){
-        FavouriteEntity favouriteEntity = new FavouriteEntity(
+    private FavoriteEntity convertFromPlace(Place place){
+        FavoriteEntity favoriteEntity = new FavoriteEntity(
                 place.getGeonameId(),
                 place.getPlace(),
                 place.getMunicipality(),
@@ -208,7 +208,7 @@ public class WeatherDatabaseAccess implements DatabaseAccess {
                 place.getLongitude(),
                 place.getLatitude()
         );
-        return favouriteEntity;
+        return favoriteEntity;
     }
 
     /**

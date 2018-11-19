@@ -8,7 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
  * Room persistence Entity class used to store Place data in the database
  */
 @Entity
-public class FavouriteEntity {
+public class FavoriteEntity {
 
     @PrimaryKey
     private long id;
@@ -28,7 +28,7 @@ public class FavouriteEntity {
     @ColumnInfo(name = "latitude")
     private double latitude;
 
-    public FavouriteEntity(long id, String place, String municipality, String county, double longitude, double latitude) {
+    public FavoriteEntity(long id, String place, String municipality, String county, double longitude, double latitude) {
         this.id = id;
         this.place = place;
         this.municipality = municipality;
