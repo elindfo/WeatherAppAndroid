@@ -6,6 +6,9 @@ import android.arch.persistence.room.PrimaryKey;
 
 import java.util.Date;
 
+/**
+ * Room persistence Entity class used to store WeatherForecast data in the database
+ */
 @Entity
 public class WeatherEntity {
 

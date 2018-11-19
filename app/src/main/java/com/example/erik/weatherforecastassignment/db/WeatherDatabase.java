@@ -6,6 +6,9 @@ import android.arch.persistence.room.TypeConverters;
 
 import com.example.erik.weatherforecastassignment.db.converter.DateConverter;
 
+/**
+ * Room persistence Database class used to configure the database
+ */
 @Database(entities = {WeatherEntity.class, FavouriteEntity.class}, version = 1, exportSchema = false)
 @TypeConverters({DateConverter.class})
 public abstract class WeatherDatabase extends RoomDatabase {

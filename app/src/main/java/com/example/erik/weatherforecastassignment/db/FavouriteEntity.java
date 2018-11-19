@@ -4,6 +4,9 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+/**
+ * Room persistence Entity class used to store Place data in the database
+ */
 @Entity
 public class FavouriteEntity {
 

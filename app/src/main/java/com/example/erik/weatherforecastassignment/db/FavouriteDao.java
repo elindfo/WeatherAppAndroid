@@ -8,6 +8,9 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
+/**
+ * Room persistence Dao interface used to define database operations
+ */
 @Dao
 public interface FavouriteDao {
 

@@ -10,6 +10,9 @@ import android.arch.persistence.room.Transaction;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Room persistence abstract Dao class used to define database operations
+ */
 @Dao
 public abstract class WeatherDao {
 
