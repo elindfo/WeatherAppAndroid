@@ -27,7 +27,6 @@ import static com.example.erik.weatherforecastassignment.model.ApplicationContex
 
 public class SearchActivity extends AppCompatActivity implements OnItemClick, AsyncTaskCompleteListener{
 
-    private TextView searchTerm;
     private RecyclerView searchRecyclerView;
     private RecyclerView.Adapter searchRecyclerViewAdapter;
 
@@ -78,8 +77,6 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
 
         getSupportActionBar().setTitle("Location");
 
-        searchTerm = findViewById(R.id.weather_place_search_text);
-
         searchRecyclerView = findViewById(R.id.weather_place_search_list);
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         searchRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
@@ -90,8 +87,6 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
 
         Intent intent = getIntent();
         String place = intent.getStringExtra("place");
-
-        searchTerm.setText(R.string.weather_search_favourite_hint);
 
         getPlaceDataAsyncTask = new GetPlaceDataAsyncTask(this);
         getPlaceDataAsyncTask.execute(place);
@@ -150,68 +145,13 @@ public class SearchActivity extends AppCompatActivity implements OnItemClick, As
         }
     }
 
-    private class StoreWeatherDataAsyncTask extends AsyncTask<Place, Void, Void>{
-
-        private ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(SearchActivity.this);
-            progressDialog.setMessage("Loading...");
-            progressDialog.setIndeterminate(false);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            if(progressDialog.isShowing()){
-                progressDialog.dismiss();
-            }
-            super.onPostExecute(v);
-            finish();
-        }
-
-        @Override
-        protected Void doInBackground(Place... places) {
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": doInBackground");
-            if(!isCancelled()){
-                weatherModel.setWeatherForecastsByPlace(places[0]);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onCancelled(){
-            Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onCancelled");
-            super.onCancelled();
-        }
-    }
-
     private class AddToFavouriteAsyncTask extends AsyncTask<Place, Void, Void>{
 
-        private ProgressDialog progressDialog;
         private String placeName = "";
         private boolean added = false;
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(SearchActivity.this);
-            progressDialog.setMessage("Loading...");
-            progressDialog.setIndeterminate(false);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
         protected void onPostExecute(Void v) {
-            if(progressDialog.isShowing()){
-                progressDialog.dismiss();
-            }
             if(added){
                 Toast.makeText(getContext(), String.format(getResources().getString(R.string.weather_add_to_favourite), placeName) , Toast.LENGTH_SHORT).show();
             }
