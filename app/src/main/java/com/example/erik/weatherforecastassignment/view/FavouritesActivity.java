@@ -97,7 +97,7 @@ public class FavouritesActivity extends AppCompatActivity implements OnItemClick
 
         @Override
         protected void onPostExecute(List<Place> places) {
-            if(places != null && places.size() > 0){
+            if(places != null){
                 Log.d("WeatherForecastAssignment", this.getClass().getSimpleName() + ": onPostExecute: Updating favourites list");
                 favouritesRecyclerViewAdapter = new FavouritesRecyclerViewAdapter(getApplicationContext(), places, callback);
                 favouritesRecyclerView.setAdapter(favouritesRecyclerViewAdapter);

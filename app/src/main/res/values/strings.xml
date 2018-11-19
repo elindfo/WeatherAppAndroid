@@ -2,7 +2,7 @@
     <string name="app_name">WeatherForecastAssignment</string>
     <string name="weather_location_hint">Location not set</string>
     <string name="weather_place_string">Enter location</string>
-    <string name="weather_update_button_string">Update</string>
+    <string name="weather_update_button_string">Find</string>
     <string name="weather_place_missing_string">Enter place</string>
     <string name="weather_location_not_found_string">Location not found</string>
     <string name="weather_approvedtime_text">Approved time: %1$s</string>

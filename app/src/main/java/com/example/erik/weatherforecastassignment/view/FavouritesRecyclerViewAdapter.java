@@ -61,6 +61,7 @@ public class FavouritesRecyclerViewAdapter extends RecyclerView.Adapter<Favourit
             municipality = itemView.findViewById(R.id.weather_favourites_recycler_view_item_municipality);
             county = itemView.findViewById(R.id.weather_favourites_recycler_view_item_county);
             layout = itemView.findViewById(R.id.weather_favourites_recycler_view_layout);
+
             itemView.setOnClickListener((v) -> {
                 int pos = getAdapterPosition();
                 if(pos != RecyclerView.NO_POSITION){
